@@ -13,6 +13,14 @@ A difficult platformer with some unique features:
 
 > It's not finished; I haven't even thought of a name for it yet. It's on my to-do list.
 
+The project, from a programming perspective…
+> Was written in Swift
+
+> Has some useful classes that I created. I recommend taking a look at PuzzlePlatformer-iOS-Game/PuzzlePlatformer/PuzzlePlatformer/Library.swift for them
+>> The RigidPolygon class is what I’m using to make the blue square respond to outside forces both translationally and rotationally, which took me a while to create. The only improvement I might add would be to incorporate polygon-edge-with-neighboring-corner collision, but doing that isn’t worth it for how I’m using it.
+
+>> The Vector class is what I’m using to do all the vector math in the project. Other’s have probably also made Vector classes for swift projects, but I had a hard time finding anything that I wanted to use. It’s been tested thoroughly through this game, so it should be good to use in another project
+
 #To-Do List
 - [x] Create stationary islands
 - [x] Create collisionCornerWithLine: rotational + translational
