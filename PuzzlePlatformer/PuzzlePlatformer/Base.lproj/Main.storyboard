@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PuzzlePlatformer" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Ea-SG-nxS" customClass="ButtonView" customModule="PuzzlePlatformer" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JEV-9Q-IhK" customClass="StaticView" customModule="PuzzlePlatformer" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Tp-jb-B16" customClass="RotatingSlidingView" customModule="PuzzlePlatformer" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Smc-95-q5a" customClass="TouchAndDisplayView" customModule="PuzzlePlatformer">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Smc-95-q5a" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="1uN-db-VVE"/>
+                            <constraint firstItem="4Ea-SG-nxS" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="AIJ-GW-ry1"/>
+                            <constraint firstItem="5Tp-jb-B16" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="FIJ-KK-pX8"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="5Tp-jb-B16" secondAttribute="trailing" constant="-20" id="Qwu-Yw-TK9"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Smc-95-q5a" secondAttribute="bottom" id="Vf4-Ma-n2Z"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="5Tp-jb-B16" secondAttribute="bottom" id="VvA-so-wMg"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="JEV-9Q-IhK" secondAttribute="bottom" id="WWn-aF-eIr"/>
+                            <constraint firstItem="4Ea-SG-nxS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="WvB-z0-x0G"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="JEV-9Q-IhK" secondAttribute="trailing" constant="-20" id="YXC-yI-WcL"/>
+                            <constraint firstItem="JEV-9Q-IhK" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="bvk-6A-BqC"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="4Ea-SG-nxS" secondAttribute="bottom" id="dS9-fU-7U1"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4Ea-SG-nxS" secondAttribute="trailing" constant="-20" id="gsH-S5-Flz"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Smc-95-q5a" secondAttribute="trailing" constant="-20" id="pLy-Es-ZeL"/>
+                            <constraint firstItem="5Tp-jb-B16" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="rHX-uT-OAz"/>
+                            <constraint firstItem="Smc-95-q5a" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="xiT-yI-eum"/>
+                            <constraint firstItem="JEV-9Q-IhK" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="ypX-kr-ksn"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="4Ea-SG-nxS"/>
+                                <exclude reference="JEV-9Q-IhK"/>
+                                <exclude reference="5Tp-jb-B16"/>
+                                <exclude reference="Smc-95-q5a"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="Vf4-Ma-n2Z"/>
+                                <exclude reference="VvA-so-wMg"/>
+                                <exclude reference="WWn-aF-eIr"/>
+                                <exclude reference="dS9-fU-7U1"/>
+                                <exclude reference="AIJ-GW-ry1"/>
+                                <exclude reference="WvB-z0-x0G"/>
+                                <exclude reference="gsH-S5-Flz"/>
+                                <exclude reference="FIJ-KK-pX8"/>
+                                <exclude reference="Qwu-Yw-TK9"/>
+                                <exclude reference="rHX-uT-OAz"/>
+                                <exclude reference="YXC-yI-WcL"/>
+                                <exclude reference="bvk-6A-BqC"/>
+                                <exclude reference="ypX-kr-ksn"/>
+                                <exclude reference="1uN-db-VVE"/>
+                                <exclude reference="pLy-Es-ZeL"/>
+                                <exclude reference="xiT-yI-eum"/>
+                            </mask>
+                        </variation>
+                        <variation key="widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="4Ea-SG-nxS"/>
+                                <include reference="JEV-9Q-IhK"/>
+                                <include reference="5Tp-jb-B16"/>
+                                <include reference="Smc-95-q5a"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="Vf4-Ma-n2Z"/>
+                                <include reference="VvA-so-wMg"/>
+                                <include reference="WWn-aF-eIr"/>
+                                <include reference="dS9-fU-7U1"/>
+                                <include reference="AIJ-GW-ry1"/>
+                                <include reference="WvB-z0-x0G"/>
+                                <include reference="gsH-S5-Flz"/>
+                                <include reference="FIJ-KK-pX8"/>
+                                <include reference="Qwu-Yw-TK9"/>
+                                <include reference="rHX-uT-OAz"/>
+                                <include reference="YXC-yI-WcL"/>
+                                <include reference="bvk-6A-BqC"/>
+                                <include reference="ypX-kr-ksn"/>
+                                <include reference="1uN-db-VVE"/>
+                                <include reference="pLy-Es-ZeL"/>
+                                <include reference="xiT-yI-eum"/>
+                            </mask>
+                        </variation>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="432" y="388"/>
+        </scene>
+    </scenes>
+</document>

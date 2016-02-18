@@ -1,0 +1,954 @@
+//
+//  Library.swift
+//  PuzzlePlatformer
+//
+//  Created by Owen Gallagher on 23/11/15.
+//  Copyright © 2015 Owen. All rights reserved.
+//
+
+import Foundation
+
+class Player: RigidPolygon {
+    var startMoving: Bool
+    
+    init() {
+        startMoving = false
+        super.init(l: Vector(X: -1, Y: -1), v: "-6,-6 6,-6 6,6 -6,6", f: true)
+    }
+    
+    func flickForce() {
+        if initialCursor != nil && finalCursor != nil {
+            if !startMoving {
+                startMoving = true
+            }
+            let flickForce = Vector(X: Float(finalCursor.x), Y: Float(finalCursor.y))
+            flickForce.x -= Float(initialCursor.x)
+            flickForce.y -= Float(initialCursor.y)
+            if flickForce.mag() < 90 {
+                if flickForce.mag() < 5 {
+                    flickForce.mult(0)
+                }
+                else {
+                    flickForce.norm()
+                    flickForce.mult(1.5)
+                }
+            }
+            else if flickForce.mag() < 150 {
+                flickForce.norm()
+                flickForce.mult(2)
+            }
+            else {
+               flickForce.norm()
+                flickForce.mult(3)
+            }
+            
+            if touchingSurface && level > 0 {
+                velocity.set(flickForce)
+            }
+            
+            initialCursor = nil
+        }
+    }
+    
+    func edgeBounce() {
+        if location.x > centerX + Float(160) || location.x < centerX - Float(160) || location.y > centerY + Float(240) || location.y < centerY - Float(240) {
+            reset = true
+        }
+    }
+    
+    func repelForce(otherLocation: Vector, otherNormal: Vector) {
+        let repelForce = Vector(X: location.x, Y: location.y)
+        repelForce.sub(otherLocation)
+        if angleBetween(otherNormal, vector2: repelForce) < Float(M_PI * 0.45) {
+            if repelForce.mag() < otherNormal.mag()+10 {
+                repelForce.norm()
+                repelForce.mult(1.5)
+                if level > 0 {
+                    velocity.set(repelForce)
+                }
+            }
+        }
+    }
+    
+    func restart(l: Vector) {
+        startMoving = false
+        location.set(l)
+        velocity.mult(0)
+        myGravity.set(Vector(X: 0, Y: 1))
+        myGravity.mult(0.05)
+    }
+}
+
+class Level {
+    var islands: [Island] = []
+    var items: [Item] = []
+    var doorCount: Int = 0
+    var doorsOpened: Int = 0
+    var playerStart: Vector
+    var enableRotation: Bool = false
+    
+    init(start: Vector, rotates: Bool) {
+        playerStart = Vector(X: centerX + start.x, Y: centerY + start.y)
+        enableRotation = rotates
+    }
+    
+    func addIsland(island: Island) {
+        islands.append(island)
+    }
+    
+    func addItem(item: Item) {
+        items.append(item)
+        if item.type == "door" {
+            doorCount++
+        }
+    }
+    
+    func checkDoors() {
+        var counter = 0
+        for item in items {
+            if item.type == "door" && item.opened {
+                counter++
+            }
+        }
+        if counter > doorsOpened {
+            doorsOpened = counter
+        }
+    }
+}
+
+class Island {
+    var location: Vector
+    var angle: Float
+    var angleV: Float
+    var angleA: Float
+    var vertices: [Vector] = []
+    var canRotate: Bool
+    var canSlide: Bool
+    var rail: [Vector] = []
+    var anchorIsland: Int? = nil
+    var key: Int? = nil
+    var timer: Int? = nil
+    
+    init(l: Vector, v: String, rotates: Bool, slides: Bool, railStart: Vector? = nil, railEnd: Vector? = nil, pivotNum: Int? = nil, keyNum: Int? = nil) {
+        location = Vector(X: centerX + l.x, Y: centerY + l.y)
+        angle = 0
+        angleV = 0
+        angleA = 0
+        
+        let vStrings = v.componentsSeparatedByString(" ")
+        for vertex in vStrings {
+            let vComponents = vertex.componentsSeparatedByString(",")
+            vertices.append(Vector(X: Float(vComponents[0])!, Y: Float(vComponents[1])!))
+        }
+        
+        canRotate = rotates
+        
+        canSlide = slides
+        
+        if canSlide && railStart != nil && railEnd != nil {
+            rail.append(railStart!)                                     //bound1
+            rail.append(railEnd!)                                       //bound2
+            rail.append(Vector(X: 0, Y: 0))                             //velocity parallel to the rail
+        }
+        
+        if canRotate &&  pivotNum != nil {
+            anchorIsland = pivotNum!
+        }
+        
+        if keyNum != nil {
+            key = keyNum
+            timer = 0
+        }
+    }
+    
+    func rotate() {
+        if canRotate {
+            if anchorIsland != nil {
+                let otherLocation = Vector(X: levels[level].islands[anchorIsland!].location.x, Y: levels[level].islands[anchorIsland!].location.y)
+                let radial = Vector(X: location.x, Y: location.y)
+                
+                radial.sub(otherLocation)
+                let magnitude = radial.mag()
+                
+                angleV = levels[level].islands[anchorIsland!].angleV
+                angle += angleV
+                if angle < 0 {
+                    angle += Float(M_PI * 2)
+                }
+                if angle > Float(M_PI * 2) {
+                    angle -= Float(M_PI * 2)
+                }
+                
+                radial.set(createVectorFromAngle(radial.heading() + angleV))
+                radial.mult(magnitude)
+                radial.add(otherLocation)
+                location.set(radial)
+            }
+            else {
+                angleA = (gravity.heading() - Float(M_PI*0.5))
+                if angleA < 0 {
+                    angleA += Float(M_PI * 2)
+                }
+                if angleA > Float(M_PI * 2) {
+                    angleA -= Float(M_PI * 2)
+                }
+                if angle < 0 {
+                    angle += Float(M_PI * 2)
+                }
+                if angle > Float(M_PI * 2) {
+                    angle -= Float(M_PI * 2)
+                }
+                
+                angleA -= angle
+                
+                if angleA > Float(M_PI) {
+                    angleA = Float(M_PI * 2)-angleA
+                    angleA *= -1
+                }
+                else if angleA < -1*Float(M_PI) {
+                    angleA = Float(M_PI * -2)-angleA
+                    angleA *= -1
+                }
+                
+                angleA *= 0.001
+                
+                angleV += angleA
+                angleV *= 0.95
+                angle += angleV
+            }
+            
+            for vertex in vertices {
+                let radial = Vector(X: vertex.x, Y: vertex.y)
+                let magnitude = radial.mag()
+                
+                radial.set(createVectorFromAngle(radial.heading() + angleV))
+                radial.mult(magnitude)
+                vertex.set(radial)
+            }
+        }
+    }
+    
+    func slide() {
+        if canSlide && rail.count > 0 {
+            let railLine = Vector(X: rail[0].x, Y: rail[0].y)
+            railLine.sub(rail[1])
+            
+            let acceleration = Vector(X: gravity.x, Y: gravity.y)
+            acceleration.mult(0.05)
+            rail[2].add(acceleration)
+            
+            if angleBetween(railLine, vector2: rail[2]) > Float(M_PI * 0.5) {
+                railLine.mult(-1)
+            }
+            
+            let railAngle = angleBetween(railLine, vector2: rail[2])
+            let magnitude = rail[2].mag()
+            
+            rail[2].set(railLine)
+            rail[2].norm()
+            rail[2].mult(cos(railAngle) * magnitude * 0.95)
+            
+            location.add(rail[2])
+            
+            let checkLine = Vector(X: location.x, Y: location.y)
+            checkLine.sub(rail[0])
+            if checkLine.mag() > railLine.mag() {
+                location.set(rail[1])
+            }
+            checkLine.set(location)
+            checkLine.sub(rail[1])
+            if checkLine.mag() > railLine.mag() {
+                location.set(rail[0])
+            }
+        }
+    }
+    
+    func unlock() {
+        if key != nil {
+            if levels[level].items[key!].opened {
+                if !(timer > 150) {
+                    timer!++
+                }
+            }
+        }
+    }
+}
+
+class Shrapnel {
+    let location: Vector
+    let velocity: Vector
+    let speed: Float
+    
+    init(start: Vector, heading: Vector) {
+        speed = 3
+        
+        location = start
+        velocity = heading
+        velocity.mult(speed)
+    }
+    
+    func move() {
+        velocity.mult(0.9)
+        location.add(velocity)
+    }
+}
+
+class Bullet {
+    let location: Vector
+    let velocity: Vector
+    let acceleration: Vector
+    let radius: Int
+    let speed: Float
+    var timer: Int
+    var explode: Int
+    
+    init(start: Vector, heading: Vector) {
+        speed = 4.5
+        timer = 0
+        explode = 0
+        
+        location = start
+        velocity = heading
+        velocity.mult(speed)
+        acceleration = Vector(X: 0, Y: 0)
+        radius = 3
+    }
+    
+    func tick() {
+        if explode == 0 {
+            timer++
+            
+            if timer > 200 {
+                explode = 1
+            }
+            else if Vector(X: location.x-player.location.x, Y: location.y-player.location.y).mag() < Float(radius + 4) {
+                explode = 3
+            }
+        }
+    }
+    
+    func collide(island: Island) {
+        for var v2 = 0; v2<island.vertices.count; v2++ {
+            let p2 = Vector(X: 0, Y: 0)
+            p2.set(island.location)
+            p2.add(island.vertices[v2])
+            let line2 = Vector(X: p2.x, Y: p2.y)
+            line2.sub(location)
+            
+            if line2.mag() < Float(radius) + (velocity.mag()*0.5) {
+                let angle = angleBetween(velocity, vector2: line2)
+                
+                if angle < Float(0.5 * M_PI) {
+                    line2.norm()
+                    line2.mult(-2 * cos(angle) * velocity.mag())
+                    velocity.add(line2)
+                }
+                
+            }
+            
+            var v1 = v2 - 1
+            if v1 < 0 {
+                v1 = island.vertices.count-1
+            }
+            
+            let p1 = Vector(X: 0, Y: 0)
+            p1.set(island.location)
+            p1.add(island.vertices[v1])
+            
+            let wall = Vector(X: p2.x, Y: p2.y)
+            wall.sub(p1)
+            
+            let line1 = Vector(X: location.x, Y: location.y)
+            line1.sub(p1)
+            
+            if angleBetween(line2, vector2: wall) < Float(0.5 * M_PI) && angleBetween(line1, vector2: wall) < Float(0.5 * M_PI) {
+                var angle = angleBetween(line1, vector2: wall)
+                let shadow = Vector(X: wall.x, Y: wall.y)
+                shadow.norm()
+                shadow.mult(cos(angle) * line1.mag())
+                shadow.add(p1)
+                
+                let line3 = Vector(X: shadow.x, Y: shadow.y)
+                line3.sub(location)
+                
+                if line3.mag() < Float(radius) + (velocity.mag()*0.5) {
+                    angle = angleBetween(line3, vector2: velocity)
+                    
+                    if angle < Float(0.5 * M_PI) {
+                        line3.norm()
+                        line3.mult(-2 * cos(angle) * velocity.mag())
+                        velocity.add(line3)
+                    }
+                }
+            }
+        }
+    }
+    
+    func move() {
+        let myGravity = Vector(X: gravity.x, Y: gravity.y)
+        myGravity.mult(0.05)
+        
+        acceleration.add(myGravity)
+        velocity.add(acceleration)
+        velocity.mult(0.99)
+        location.add(velocity)
+        
+        acceleration.mult(0)
+    }
+}
+
+class Item {
+    var location: Vector
+    var angle: Float
+    var type: String
+    var pivot: Int? = nil
+    var bullets: [Bullet] = []
+    var shrapnel: [Shrapnel] = []
+    var opened: Bool
+    var key: Int? = nil
+    var timer: Int? = nil
+    var initialState: Bool? = nil
+    
+    init(l: Vector, a: Float, t: String, p: Int? = nil, k: Int? = nil, i: Bool? = nil) {
+        location = Vector(X: centerX + l.x, Y: centerY + l.y)
+        angle = a
+        type = t
+        if p != nil {
+            pivot = p
+        }
+        if k != nil {
+            key = k
+        }
+        if i != nil {
+            initialState = i
+        }
+        opened = false
+        if t == "turret" || (t == "door" && k != nil) || t == "button" || (t == "spike" && k != nil) {
+            timer = 0
+        }
+    }
+    
+    func rotate(anchor: Vector, angleV: Float) {
+        let radial = Vector(X: location.x, Y: location.y)
+        radial.sub(anchor)
+        let magnitude = radial.mag()
+        
+        radial.set(createVectorFromAngle(radial.heading() + angleV))
+        radial.mult(magnitude)
+        radial.add(anchor)
+        
+        location.set(radial)
+        angle += angleV
+    }
+    
+    func action(player: Vector) {
+        let distance = Vector(X: player.x, Y: player.y)
+        distance.sub(location)
+        
+        if type == "spike" {
+            if key != nil {
+                if levels[level].items[key!].opened {
+                    if !(timer > 50) {
+                        timer!++
+                    }
+                }
+            }
+            
+            if distance.mag() < 14 {
+                if key == nil {
+                    reset = true
+                }
+                else {
+                    if initialState == true {
+                        if timer == 0 {
+                            reset = true
+                        }
+                    }
+                    else {
+                        if timer >= 50 {
+                            reset = true
+                        }
+                    }
+                }
+            }
+        }
+        else if type == "door" {
+            if key != nil {
+                if levels[level].items[key!].opened {
+                    if !(timer > 200) {
+                        timer!++
+                    }
+                }
+            }
+            
+            if distance.mag() < 15 {
+                if key != nil {
+                    if timer > 200 {
+                        opened = true
+                    }
+                }
+                else {
+                    opened = true
+                }
+            }
+        }
+        else if type == "turret" {
+            timer!++
+            
+            if (timer! % 150 == 0) {
+                distance.norm()
+                distance.mult(Float(arc4random_uniform(100)) * 0.01 * 12)
+                
+                let bullet = Vector(X: location.x, Y: location.y)
+                bullet.add(distance)
+                distance.norm()
+                
+                bullets.append(Bullet(start: Vector(X: bullet.x, Y: bullet.y), heading: Vector(X: distance.x, Y: distance.y)))
+            }
+            
+            for var bullet=0; bullet < bullets.count; bullet++ {
+                bullets[bullet].tick()
+                
+                if bullets[bullet].explode > 0 {
+                    if bullets[bullet].explode == 3 {
+                        reset = true
+                    }
+                    
+                    for var i=0; i < 3; i++ {
+                        shrapnel.append(Shrapnel(start: Vector(X: bullets[bullet].location.x, Y: bullets[bullet].location.y), heading: Vector(X: bullets[bullet].velocity.x + (Float(arc4random_uniform(100)) * 0.01 * 4) - 2, Y: bullets[bullet].velocity.y + (Float(arc4random_uniform(100)) * 0.01 * 4) - 2)))
+                    }
+                    
+                    bullets.removeAtIndex(bullet)
+                }
+            }
+        }
+        else if type == "button" {
+            if key == nil {
+                if timer > 0 && timer < 50 {
+                    timer!++
+                }
+                else if timer > 49 {
+                    opened = true
+                }
+                if distance.mag() < 15 && timer == 0 {
+                    timer = 1
+                }
+            }
+            else if levels[level].items[key!].opened {
+                if timer > 0 && timer < 50 {
+                    timer!++
+                }
+                else if timer > 49 {
+                    opened = true
+                }
+                if distance.mag() < 15 && timer == 0 {
+                    timer = 1
+                }
+            }
+        }
+    }
+}
+
+class RigidPolygon {
+    var location: Vector
+    var velocity: Vector
+    var acceleration: Vector
+    
+    var angle: Float
+    var angleV: Float
+    var angleA: Float
+    
+    var myGravity: Vector
+    var touchingSurface: Bool
+    var surfaceRotates: Bool
+    var createFriction: Bool
+    
+    var vertices: [Vector] = []
+    
+    init(l: Vector, v: String, f: Bool) {
+        location = Vector(X: l.x, Y: l.y)
+        velocity = Vector(X: 0, Y: 0)
+        acceleration = Vector(X: 0, Y: 0)
+        angle = 0
+        angleV = 0
+        angleA = 0.09
+        
+        myGravity = Vector(X: 0, Y: 1)
+        myGravity.mult(0.05)
+        touchingSurface = false
+        surfaceRotates = false
+        createFriction = f
+        
+        let vStrings = v.componentsSeparatedByString(" ")
+        for vertex in vStrings {
+            let vComponents = vertex.componentsSeparatedByString(",")
+            vertices.append(Vector(X: Float(vComponents[0])!, Y: Float(vComponents[1])!))
+        }
+    }
+    
+    func collisionCornerWithLine(p1: Vector, p2: Vector, p3: Vector, a: Float? = nil) {
+        if level > 0 {
+            let boundary = Vector(X: 0, Y: 0)
+            let line = Vector(X: 0, Y: 0)
+            var collisionsAngle: Float = 0
+            var closestCorner: Float = 10
+            
+            for vertex in vertices {
+                let corner = Vector(X: vertex.x, Y: vertex.y)
+                let myLocation = Vector(X: location.x, Y: location.y)
+                corner.add(myLocation)
+                
+                boundary.set(corner)
+                boundary.sub(p1)
+                
+                line.set(p2)
+                line.sub(p1)
+                
+                collisionsAngle = angleBetween(line, vector2: boundary)
+                
+                if collisionsAngle < Float(M_PI*0.5) {
+                    boundary.set(corner)
+                    boundary.sub(p2)
+                    
+                    line.set(p1)
+                    line.sub(p2)
+                    
+                    collisionsAngle = angleBetween(line, vector2: boundary)
+                    
+                    if collisionsAngle < Float(M_PI*0.5) {
+                        line.norm()
+                        line.mult(cos(collisionsAngle)*boundary.mag())
+                        line.add(p2)
+                        
+                        let shadow: Vector = Vector(X: line.x, Y: line.y)
+                        line.sub(corner)
+                        
+                        if line.mag() < 10 {
+                            touchingSurface = true
+                        }
+                        
+                        if line.mag() < 1.8*(velocity.mag()+1) {
+                            collisionsAngle = angleBetween(velocity,vector2: line)
+                            if collisionsAngle < Float(M_PI*0.5) {
+                                let force = Vector(X: line.x, Y: line.y)
+                                var friction: Vector? = nil
+                                if (createFriction) {
+                                    friction = Vector(X: myLocation.x, Y: myLocation.y)
+                                }
+                                
+                                force.norm()
+                                force.mult(velocity.mag() * cos(collisionsAngle))
+                                if (createFriction) {
+                                    friction!.add(force)
+                                }
+                                force.mult(-1.4)
+                                
+                                myLocation.add(velocity)
+                                if (createFriction) {
+                                    friction!.sub(myLocation)
+                                    friction!.mult(0.085)
+                                    velocity.add(friction!)
+                                }
+                                
+                                velocity.add(force)
+                                
+                                let radial = Vector(X: shadow.x, Y: shadow.y)
+                                radial.sub(p3)
+                                
+                                if (line.mag() <= closestCorner && createFriction) {
+                                    location.add(line)
+                                    line.norm()
+                                    line.mult(1.8*(force.mag()+1))
+                                    if angleBetween(line, vector2: radial) > Float(M_PI * 0.5) {
+                                        line.mult(-1)
+                                    }
+                                    location.add(line)
+                                    
+                                    closestCorner = line.mag()
+                                }
+                                else {
+                                    line.mult(-1)
+                                }
+                                
+                                radial.set(location)
+                                radial.sub(corner)
+                                
+                                collisionsAngle = angleBetween(radial, vector2: line)
+                                if (sin(collisionsAngle) < 0.65) {
+                                    angleV = abs(sin(collisionsAngle) * (0.1 + (velocity.mag() * 0.1)))
+                                    if radial.heading() < line.heading() {
+                                        angleV *= -1
+                                    }
+                                }
+                                else {
+                                    angleV = 0
+                                    
+                                    if radial.heading() < line.heading() {
+                                        angle = line.heading() - Float(M_PI*0.5)
+                                    }
+                                    else {
+                                        angle = line.heading() + Float(M_PI*0.5)
+                                    }
+                                }
+                                
+                                if a != nil {
+                                    var otherGravity = a! + Float(M_PI * 0.5)
+                                    while otherGravity < 0 {
+                                        otherGravity += Float(M_PI * 2)
+                                    }
+                                    while otherGravity > Float(M_PI * 2) {
+                                        otherGravity -= Float(M_PI * 2)
+                                    }
+                                    myGravity.set(createVectorFromAngle(otherGravity))
+                                    myGravity.mult(0.05)
+                                    
+                                    surfaceRotates = true
+                                }
+                                else {
+                                    surfaceRotates = false
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func fallForce() {
+        if level > 0 {
+            if touchingSurface && !surfaceRotates {
+                myGravity.set(gravity)
+                myGravity.mult(0.05)
+            }
+            
+            acceleration.add(myGravity)
+        }
+    }
+    
+    func move() {
+        if level > 0 {
+            velocity.add(acceleration)
+            velocity.mult(0.99)
+            location.add(velocity)
+            
+            angleV += angleA
+            angleV *= 0.99
+            angle += angleV
+        }
+        
+        for var i=0; i<vertices.count; i++ {
+            let radial = Vector(X: vertices[i].x, Y: vertices[i].y)
+            let distance = radial.mag()
+            radial.set(createVectorFromAngle(radial.heading() + angleV))
+            radial.mult(distance)
+            vertices[i] = radial
+        }
+        
+        acceleration.mult(0)
+        angleA = 0
+    }
+}
+
+class Button {
+    var initial: Float
+    var location: Vector
+    var target: Float
+    var radius: Int
+    var tapped: Bool
+    var skin: String
+    var link: Int
+    var station: Int? = nil
+    var skinChanged: Bool = false
+    
+    init(l: Vector, r: Int, lnk: Int, lvl: Int? = nil) {
+        initial = l.x
+        location = Vector(X: l.x, Y: l.y)
+        target = location.x
+        radius = r
+        tapped = false
+        skin = String(lnk) + "-"
+        link = lnk
+        
+        if lvl != nil {
+            station = lvl
+        }
+    }
+    
+    func changeSkin() {
+        let previousSkin = skin
+        if station != nil {
+            if level != station {
+                skin = ""
+            }
+            else if link <= highestLevel!+2 && link < levels.count {
+                if levelSelect == link {
+                    skin = String(link) + "+"
+                }
+                else if beatenLevels!.componentsSeparatedByString(",").contains(String(link)) {
+                    skin = String(link) + "="
+                }
+                else {
+                    skin = String(link) + "-"
+                }
+            }
+            else {
+                skin = "•-"
+            }
+        }
+        
+        if previousSkin != skin {
+            skinChanged = true
+        }
+        else {
+            skinChanged = false
+        }
+    }
+    
+    func checkSelected() {
+        if ((station != nil && level == station) || (station == nil && level > 0)) && (initialCursor != nil && tapped == false) {
+            let distance = Vector(X: Float(location.x), Y: Float(location.y))
+            distance.x += Float(radius)*0.5
+            distance.sub(Vector(X: Float(initialCursor.x), Y: Float(initialCursor.y)))
+            
+            if distance.mag() < Float(radius) {
+                tapped = true
+            }
+        }
+    }
+    
+    func action() {
+        if ((station != nil && level == station!) || (station == nil && level > 0)) && (tapped && link <= highestLevel!+2 && link < levels.count) {
+            levelSelect = link
+            tapped = false
+        }
+    }
+    
+    func slide() {
+        if station == 0 && link > 0 && target-location.x == 0 {
+            if initialCursor != nil && finalCursor != nil && initialCursor.x != finalCursor.x {
+                target = Float(finalCursor.x)
+                target -= Float(initialCursor.x)
+                target /= abs(target)
+                target *= Float(viewWidth)
+                
+                if location.x < Float(viewWidth) && target < 0 {
+                    target = Float(2*viewWidth)
+                }
+                if location.x > Float(2*viewWidth) && target > 0 {
+                    target = Float(-2*viewWidth)
+                }
+                
+                target += location.x
+            }
+        }
+        
+        if abs(location.x-target) < 2 {
+            location.x = target
+        }
+        
+        location.x += (target-location.x)*0.5
+    }
+}
+
+class Vector {
+    var x: Float
+    var y: Float
+    
+    init(X: Float, Y: Float) {
+        x = X
+        y = Y
+    }
+    
+    func set(vector: Vector) {
+        x = vector.x
+        y = vector.y
+    }
+    
+    func mag() ->Float {
+        return pow((powf(x, 2) + powf(y, 2)), 0.5)
+    }
+    
+    func heading() ->Float {
+        var heading: Float = 0.0
+        if y >= 0 {
+            if (x > 0) {
+                heading = atan(y/x)
+            }
+            else {
+                heading = Float(M_PI) - abs(atan(y/x))
+            }
+        }
+        else {
+            if (x >= 0) {
+                heading = Float(M_PI * 2.0) - abs(atan(y/x))
+            }
+            else {
+                heading = Float(M_PI) + atan(y/x)
+            }
+        }
+        return heading
+    }
+    
+    func add(vector: Vector) {
+        x += vector.x
+        y += vector.y
+    }
+    
+    func sub(vector: Vector) {
+        x -= vector.x
+        y -= vector.y
+    }
+    
+    func mult(constant: Float) {
+        x *= constant
+        y *= constant
+    }
+    
+    func div(constant: Float) {
+        x /= constant
+        y /= constant
+    }
+    
+    func norm() {
+        if (!(x == 0 && y == 0)) {
+            let heading = self.heading()
+            
+            x = cos(heading)
+            y = sin(heading)
+        }
+    }
+    
+    func equals(vector: Vector) ->Bool {
+        var isEsqual: Bool = false
+        
+        if (x == vector.x && y == vector.y) {
+            isEsqual = true
+        }
+        
+        return isEsqual
+    }
+}
+
+func angleBetween(vector1: Vector, vector2: Vector)->Float {
+    let heading1: Float = vector1.heading()
+    let heading2: Float = vector2.heading()
+    var angle: Float = 0
+    
+    angle = abs(heading2 - heading1)
+    
+    if Double(angle) > M_PI {
+        angle = Float(M_PI*2.0) - angle
+    }
+    
+    return angle
+}
+
+func createVectorFromAngle(angle: Float) ->Vector {
+    let created = Vector(X: 0, Y: 0)
+    
+    created.x = cos(angle)
+    created.y = sin(angle)
+    
+    return created
+}
