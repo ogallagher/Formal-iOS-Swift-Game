@@ -189,3 +189,4 @@ The project, from a programming perspective…
 - [x] Test new death boundaries
 - [x] Mark gameplay view frame in StaticView
 - [ ] What should I do with the opened menu space?
+- [x] Fix sliding island positions (not centered around centerX and centerY?)
