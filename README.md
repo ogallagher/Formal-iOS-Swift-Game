@@ -94,7 +94,7 @@ The project, from a programming perspective…
 - [x] Delete 2 spikes and add an extension to the base of level 4
 - [x] Perhaps insert a new level 7 which looks more like level 1 with rotation
 - [x] Move the current level 5 after first rotation level?
-- [ ] Add rails to the things drawn in StaticView
+- [x] Add rails to the things drawn in StaticView
 - [x] Change font to something more simplistic
 - [x] Fix button press glitch (not always pressed; delete finalCursor requirement)
 - [ ] Fix button slide glitch (if done too fast and too rapidly, the buttons overlap)
@@ -137,7 +137,7 @@ The project, from a programming perspective…
 - [x] Add locked doors, which unlock when a button-item is pressed
 - [x] Fix button-item glitch, where you have to be on the button to unlock the door
 - [x] Add button-item to and fix level 16
-- [ ] Put level indicator drawing in a different view, so it doesn't update after it reaches the end of its animation
+- [ ] Put rotation indicator drawing in a different view, so it doesn't update after it reaches the end of its animation
 - [x] Add text to level 16
 - [x] Add level skipping
 - [x] Keep track of beatenLevels
@@ -161,7 +161,7 @@ The project, from a programming perspective…
 - [x] Scale bullets and shrapnel (scale drawn locations and sizes)
 - [x] Translate player (hooked to centerX,centerY)
 - [x] Scale player, visually (since the player is not tapped, just scale drawn location and size)
-- [x] Translate and scale level indicator, visually (doesn’t have an actual location, anyway)
+- [x] Translate and scale rotation indicator, visually (doesn’t have an actual location, anyway)
 - [x] Switch scale to a Float (will be between 1 and 2)
 - [x] Test scaling methods
 - [x] Scale death boundaries
@@ -190,3 +190,9 @@ The project, from a programming perspective…
 - [x] Mark gameplay view frame in StaticView
 - [ ] What should I do with the opened menu space?
 - [x] Fix sliding island positions (not centered around centerX and centerY?)
+- [x] Add level parameter which isolates deviceMotion.gravity general use and application to player’s gravity
+- [x] Use new parameter for level 19
+- [ ] Create new rotation indicator: rotation; not gravityRotation
+- [ ] Add coins to areas in levels that are difficult to reach, though not necessary to continue? What would the coins do, then, if anything?
+- [x] Add sliding items (move according to a dock island’s velocity)
+

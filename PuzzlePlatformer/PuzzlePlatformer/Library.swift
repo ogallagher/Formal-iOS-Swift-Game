@@ -162,7 +162,7 @@ class Island {
             railEndPosition.add(railEnd!)
             rail.append(railEndPosition)                                       //bound2
             
-            rail.append(Vector(X: 0, Y: 0))                             //velocity parallel to the rail
+            rail.append(Vector(X: 0, Y: 0))                                    //velocity parallel to the rail
         }
         
         if canRotate &&  pivotNum != nil {
@@ -416,6 +416,7 @@ class Item {
     var angle: Float
     var type: String
     var pivot: Int? = nil
+    var dock: Int? = nil
     var bullets: [Bullet] = []
     var shrapnel: [Shrapnel] = []
     var opened: Bool
@@ -423,12 +424,15 @@ class Item {
     var timer: Int? = nil
     var initialState: Bool? = nil
     
-    init(l: Vector, a: Float, t: String, p: Int? = nil, k: Int? = nil, i: Bool? = nil) {
+    init(l: Vector, a: Float, t: String, p: Int? = nil, d: Int? = nil, k: Int? = nil, i: Bool? = nil) {
         location = Vector(X: centerX + l.x, Y: centerY + l.y)
         angle = a
         type = t
         if p != nil {
             pivot = p
+        }
+        if d != nil {
+            dock = d
         }
         if k != nil {
             key = k
@@ -453,6 +457,10 @@ class Item {
         
         location.set(radial)
         angle += angleV
+    }
+    
+    func slide(anchorV: Vector) {
+        location.add(anchorV)
     }
     
     func action(player: Vector) {

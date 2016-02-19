@@ -8,6 +8,8 @@
 
 // Possible Names:  Jigsaw, Key, Blue, Poly, Shift, Rift, Quaker...
 
+//NOTE: the date above is November 16, 2015. My laptop is set to Spanish, so XCode saved the date in the appropriate format.
+
 import Foundation
 import UIKit
 import CoreGraphics
@@ -532,8 +534,12 @@ class ViewController: UIViewController {
             levels[levels.count-1].addIsland(Island(l: Vector(X: 110, Y: 0), v: "-40,150 -40,140 25,-125 50,-125 50,150", rotates: false, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: 30, Y: -140), v: "-30,-5 30,-5 30,5 -30,5", rotates: false, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: 30, Y: 0), v: "-30,-30 30,-30 30,30 -30,30", rotates: false, slides: true, railStart: Vector(X: 30, Y: -105), railEnd: Vector(X: 30, Y: 110)))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: -105, Y: -110), v: "-25,-5 20,-5 20,5 -25,5", rotates: false, slides: false))
         
-            levels[levels.count-1].addItem(Item(l: Vector(X: -60, Y: -120), a: 0, t: "door"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 10, Y: -31), a: 0, t: "spike", d: 5))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 50, Y: -31), a: 0, t: "spike", d: 5))
+        
+            levels[levels.count-1].addItem(Item(l: Vector(X: -120, Y: -116), a: 0, t: "door"))
         
         //————————————————————————————————————————————————————————————————— 20: Guillotine
         
@@ -673,7 +679,9 @@ class TouchAndDisplayView: UIView {
             if item.pivot != nil {
                 item.rotate(levels[level].islands[item.pivot!].location, angleV: levels[level].islands[item.pivot!].angleV)
             }
-            
+            if item.dock != nil {
+                item.slide(levels[level].islands[item.dock!].rail[2])
+            }
             if item.bullets.count > 0 {
                 for var i=0; i<item.bullets.count; i++ {
                     for wall in levels[level].islands {
@@ -906,11 +914,6 @@ class RotatingSlidingView: UIView {
                 CGContextFillPath(context)
             }
             else if island.canSlide {
-                UIColor.grayColor().set()
-                CGContextMoveToPoint(context, CGFloat(island.rail[0].x * scale), CGFloat(island.rail[0].y * scale))
-                CGContextAddLineToPoint(context, CGFloat(island.rail[1].x * scale), CGFloat(island.rail[1].y * scale))
-                CGContextStrokePath(context)
-                
                 let lX = centerX + ((island.location.x - centerX)*scale)
                 let lY = centerY + ((island.location.y - centerY)*scale)
                 
@@ -1075,6 +1078,12 @@ class StaticView: UIView {
                 }
                 CGContextAddLineToPoint(context, CGFloat(lX + island.vertices[0].x*scale), CGFloat(lY + island.vertices[0].y*scale))
                 CGContextFillPath(context)
+            }
+            else if island.canSlide && island.key == nil {
+                UIColor.grayColor().set()
+                CGContextMoveToPoint(context, CGFloat(island.rail[0].x * scale), CGFloat(island.rail[0].y * scale))
+                CGContextAddLineToPoint(context, CGFloat(island.rail[1].x * scale), CGFloat(island.rail[1].y * scale))
+                CGContextStrokePath(context)
             }
         }
         
