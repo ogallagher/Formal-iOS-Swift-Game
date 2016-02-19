@@ -86,10 +86,17 @@ class Level {
     var doorsOpened: Int = 0
     var playerStart: Vector
     var enableRotation: Bool = false
+    var enableGravityRotation: Bool = false
     
-    init(start: Vector, rotates: Bool) {
+    init(start: Vector, rotates: Bool, gravityRotates: Bool? = nil) {
         playerStart = Vector(X: centerX + start.x, Y: centerY + start.y)
         enableRotation = rotates
+        if gravityRotates != nil {
+            enableGravityRotation = gravityRotates!
+        }
+        else {
+            enableGravityRotation = enableRotation
+        }
     }
     
     func addIsland(island: Island) {
@@ -724,7 +731,7 @@ class RigidPolygon {
     
     func fallForce() {
         if level > 0 {
-            if touchingSurface && !surfaceRotates {
+            if levels[level].enableGravityRotation && touchingSurface && !surfaceRotates {
                 myGravity.set(gravity)
                 myGravity.mult(0.05)
             }

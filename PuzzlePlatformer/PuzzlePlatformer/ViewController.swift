@@ -108,10 +108,6 @@ class ViewController: UIViewController {
         createButtons()
     }
     
-    /*      EXAMPLES
-        .addIsland(Island(l: Vector(X: 200, Y: 350), v: "-50,-20 50,-20 50,20 -50,20", rotates: false, slides: true, railStart: Vector(X: 100, Y: 340), railEnd: Vector(X: 300, Y: 360), ))
-    */
-    
     func createLevels() {
         //————————————————————————————————————————————————————————————————— 0: Menu
         levels.append(Level(start: Vector(X: -90, Y: 100), rotates: false))
@@ -529,7 +525,7 @@ class ViewController: UIViewController {
             levels[levels.count-1].addItem(Item(l: Vector(X: 120, Y: 31), a: 0, t: "door", k: 1))
         
         //————————————————————————————————————————————————————————————————— 19: Sliding Trap-door
-        levels.append(Level(start: Vector(X: -120, Y: 180), rotates: false))
+        levels.append(Level(start: Vector(X: -120, Y: 180), rotates: true, gravityRotates: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: -120, Y: 200), v: "-20,0 -10,-10 20,-10 20,10 -20,10", rotates: false, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: -60, Y: 200), v: "-40,-10 -20,-40 40,-40 40,10 -40,10", rotates: false, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: 20, Y: 170), v: "-40,-10 -30,-30 40,-30 40,40 -40,40", rotates: false, slides: false))
