@@ -146,8 +146,15 @@ class Island {
         canSlide = slides
         
         if canSlide && railStart != nil && railEnd != nil {
-            rail.append(railStart!)                                     //bound1
-            rail.append(railEnd!)                                       //bound2
+            let railStartPosition = Vector(X: centerX, Y: centerY)
+            let railEndPosition = Vector(X: centerX, Y: centerY)
+            
+            railStartPosition.add(railStart!)
+            rail.append(railStartPosition)                                     //bound1
+            
+            railEndPosition.add(railEnd!)
+            rail.append(railEndPosition)                                       //bound2
+            
             rail.append(Vector(X: 0, Y: 0))                             //velocity parallel to the rail
         }
         
