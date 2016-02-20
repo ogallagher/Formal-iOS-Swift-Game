@@ -955,7 +955,7 @@ class RotatingSlidingView: UIView {
         for item in levels[level].items {
             CGContextBeginPath(context)
             
-            if item.type == "spike" && (item.pivot != nil || item.key != nil) {
+            if item.type == "spike" && (item.pivot != nil || item.dock != nil || item.key != nil) {
                 UIColor.init(red: 0.95, green: 0.08, blue: 0, alpha: 1).set()
                 
                 let lX = centerX + ((item.location.x - centerX)*scale)
@@ -1088,7 +1088,7 @@ class StaticView: UIView {
         }
         
         for item in levels[level].items {
-            if item.pivot == nil && item.key == nil && item.type == "spike" {
+            if item.pivot == nil && item.dock == nil && item.key == nil && item.type == "spike" {
                 CGContextBeginPath(context)
                 
                 let lX = centerX + ((item.location.x - centerX)*scale)

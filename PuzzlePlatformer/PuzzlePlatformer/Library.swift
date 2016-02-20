@@ -262,18 +262,22 @@ class Island {
             rail[2].norm()
             rail[2].mult(cos(railAngle) * magnitude * 0.95)
             
-            location.add(rail[2])
-            
             let checkLine = Vector(X: location.x, Y: location.y)
             checkLine.sub(rail[0])
             if checkLine.mag() > railLine.mag() {
-                location.set(rail[1])
+                checkLine.set(rail[1])
+                checkLine.sub(location)
+                rail[2].set(checkLine)
             }
             checkLine.set(location)
             checkLine.sub(rail[1])
             if checkLine.mag() > railLine.mag() {
-                location.set(rail[0])
+                checkLine.set(rail[0])
+                checkLine.sub(location)
+                rail[2].set(checkLine)
             }
+            
+            location.add(rail[2])
         }
     }
     

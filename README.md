@@ -118,7 +118,7 @@ The project, from a programming perspective…
 - [ ] Add islands that slide with another anchor island
 - [ ] Change movement to not move in relation to touched sliding ground (if ground slides, add ground velocity to player.velocity)
 - [ ] Levels that "connect" to each other...?
-- [ ] Level: sliding hatch, no rotation
+- [x] Level: sliding hatch, no rotation
 - [ ] Level: sliding U
 - [ ] Level: looks like a seashell
 - [x] Level: static obstacle course
@@ -195,4 +195,7 @@ The project, from a programming perspective…
 - [ ] Create new rotation indicator: rotation; not gravityRotation
 - [ ] Add coins to areas in levels that are difficult to reach, though not necessary to continue? What would the coins do, then, if anything?
 - [x] Add sliding items (move according to a dock island’s velocity)
+- [ ] Add text to level 19
+- [x] Create drawing methods for sliding items under the RotatingAndSlidingView
+- [x] Fix sliding items glitch (Solution: set island.rail(2) to change in location when the sliding island is at one of the rail's extremes)
 
