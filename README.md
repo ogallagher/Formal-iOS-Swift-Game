@@ -1,5 +1,5 @@
 # PuzzlePlatformer-iOS-Game
-This is my first iOS game and my second iOS app, though my first was really inefficient and didn't do much.
+This is an iOS game, written with Swift, for multiple screen dimensions.
 
 
 #Description
