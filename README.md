@@ -115,10 +115,10 @@ The project, from a programming perspective…
 - [x] Add turrets that shoot little red triangles
 - [x] Add bullet class, a subclass of RigidPolygon to be shot from turrets
 - [x] Add shrapnel class, which just ejects from a given point
-- [ ] Add islands that slide with another anchor island
+- [ ] Add islands that slide with another dock island
 - [ ] Change movement to not move in relation to touched sliding ground (if ground slides, add ground velocity to player.velocity)
 - [ ] Levels that "connect" to each other...?
-- [x] Level: sliding hatch, no rotation
+- [x] Level: sliding hatch, no gravity rotation
 - [ ] Level: sliding U
 - [ ] Level: looks like a seashell
 - [x] Level: static obstacle course
@@ -130,14 +130,13 @@ The project, from a programming perspective…
 - [x] Fix bullet glitch; they seem to be colliding with the wrong coordinates. POSSIBLE PROBLEM: using the same vector names for different calculations effects previous calculations?
 - [x] Add second door to level 12
 - [x] Create shrapnel class, which ejects from an exploded bullet
-- [ ] Edit bullets so they explode after X collisions
+- [x] Edit bullets so they explode after 5 collisions
 - [x] Edit bullets so they don’t disappear if the player dies
-- [ ] Edit shrapnel so they are removed ONLY when the level resets AND changes
 - [x] Create button item class, which makes doors appear
 - [x] Add locked doors, which unlock when a button-item is pressed
 - [x] Fix button-item glitch, where you have to be on the button to unlock the door
 - [x] Add button-item to and fix level 16
-- [ ] Put rotation indicator drawing in a different view, so it doesn't update after it reaches the end of its animation
+- [ ] Put rotation indicator drawing in a different view, so it doesn't update as fast or after it reaches the end of its animation
 - [x] Add text to level 16
 - [x] Add level skipping
 - [x] Keep track of beatenLevels
@@ -192,10 +191,14 @@ The project, from a programming perspective…
 - [x] Fix sliding island positions (not centered around centerX and centerY?)
 - [x] Add level parameter which isolates deviceMotion.gravity general use and application to player’s gravity
 - [x] Use new parameter for level 19
-- [ ] Create new rotation indicator: rotation; not gravityRotation
+- [ ] Create new rotation indicators for: no rotation, rotation but not for gravity, and gravity switches (the last of which I haven't created)
 - [ ] Add coins to areas in levels that are difficult to reach, though not necessary to continue? What would the coins do, then, if anything?
 - [x] Add sliding items (move according to a dock island’s velocity)
 - [ ] Add text to level 19
 - [x] Create drawing methods for sliding items under the RotatingAndSlidingView
-- [x] Fix sliding items glitch (Solution: set island.rail(2) to change in location when the sliding island is at one of the rail's extremes)
+- [x] Fix sliding items glitch (Solution: set island.rail[2] (parallel velocity) to change in location when the sliding island is at one of the rail's extremes)
+- [ ] Level: antennae
+- [ ] Level: intrusion (first turret level)
+- [x] Edit turrets so they only shoot within π/2 radians of their eye (so they don’t shoot through the ground on which they sit)
+- [x] Make the player die if crushed by a sliding block? (touching wall on opposite sides, with at least 1 being a sliding block) OR make levels so crushing never happens (edit rail, add spikes)
 
