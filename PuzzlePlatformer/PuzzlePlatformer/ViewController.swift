@@ -526,22 +526,25 @@ class ViewController: UIViewController {
             levels[levels.count-1].addItem(Item(l: Vector(X: 95, Y: -171), a: 0, t: "door", k: 2))
             levels[levels.count-1].addItem(Item(l: Vector(X: 120, Y: 31), a: 0, t: "door", k: 1))
         
-        //————————————————————————————————————————————————————————————————— 19: Sliding Trap-door
+        //————————————————————————————————————————————————————————————————— 19: Guillotine
         levels.append(Level(start: Vector(X: -120, Y: 180), rotates: true, gravityRotates: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: -120, Y: 200), v: "-20,0 -10,-10 20,-10 20,10 -20,10", rotates: false, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: -60, Y: 200), v: "-40,-10 -20,-40 40,-40 40,10 -40,10", rotates: false, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: 20, Y: 170), v: "-40,-10 -30,-30 40,-30 40,40 -40,40", rotates: false, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: 110, Y: 0), v: "-40,150 -40,140 25,-125 50,-125 50,150", rotates: false, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: 30, Y: -140), v: "-30,-5 30,-5 30,5 -30,5", rotates: false, slides: false))
-            levels[levels.count-1].addIsland(Island(l: Vector(X: 30, Y: 0), v: "-30,-30 30,-30 30,30 -30,30", rotates: false, slides: true, railStart: Vector(X: 30, Y: -105), railEnd: Vector(X: 30, Y: 110)))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 30, Y: 0), v: "-30,-30 30,-30 30,30 -30,30", rotates: false, slides: true, railStart: Vector(X: 30, Y: -80), railEnd: Vector(X: 30, Y: 100)))
             levels[levels.count-1].addIsland(Island(l: Vector(X: -105, Y: -110), v: "-25,-5 20,-5 20,5 -25,5", rotates: false, slides: false))
         
-            levels[levels.count-1].addItem(Item(l: Vector(X: 10, Y: -31), a: 0, t: "spike", d: 5))
-            levels[levels.count-1].addItem(Item(l: Vector(X: 50, Y: -31), a: 0, t: "spike", d: 5))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 10, Y: 31), a: Float(M_PI), t: "spike", d: 5))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 20, Y: 31), a: Float(M_PI), t: "spike", d: 5))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 30, Y: 31), a: Float(M_PI), t: "spike", d: 5))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 40, Y: 31), a: Float(M_PI), t: "spike", d: 5))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 50, Y: 31), a: Float(M_PI), t: "spike", d: 5))
         
             levels[levels.count-1].addItem(Item(l: Vector(X: -120, Y: -116), a: 0, t: "door"))
         
-        //————————————————————————————————————————————————————————————————— 20: Guillotine
+        //————————————————————————————————————————————————————————————————— 20: Trap-door
         
         //————————————————————————————————————————————————————————————————— 21: Boat
         

@@ -334,9 +334,7 @@ class Bullet {
     
     func tick() {
         if explode == 0 {
-            timer++
-            
-            if timer > 200 {
+            if timer > 5 || location.x < centerX - viewWidth/2 || location.x > centerX + viewWidth/2 || location.y < centerY - viewHeight/2 || location.y > centerY + viewHeight/2 {
                 explode = 1
             }
             else if Vector(X: location.x-player.location.x, Y: location.y-player.location.y).mag() < Float(radius + 4) {
@@ -350,6 +348,7 @@ class Bullet {
             let p2 = Vector(X: 0, Y: 0)
             p2.set(island.location)
             p2.add(island.vertices[v2])
+            
             let line2 = Vector(X: p2.x, Y: p2.y)
             line2.sub(location)
             
@@ -396,6 +395,7 @@ class Bullet {
                         line3.norm()
                         line3.mult(-2 * cos(angle) * velocity.mag())
                         velocity.add(line3)
+                        timer++
                     }
                 }
             }
@@ -522,14 +522,18 @@ class Item {
             timer!++
             
             if (timer! % 150 == 0) {
-                distance.norm()
-                distance.mult(Float(arc4random_uniform(100)) * 0.01 * 12)
+                let eye = createVectorFromAngle(angle - 0.5*Float(M_PI))
                 
-                let bullet = Vector(X: location.x, Y: location.y)
-                bullet.add(distance)
-                distance.norm()
-                
-                bullets.append(Bullet(start: Vector(X: bullet.x, Y: bullet.y), heading: Vector(X: distance.x, Y: distance.y)))
+                if angleBetween(distance, vector2: eye) < 0.5*Float(M_PI) {
+                    distance.norm()
+                    distance.mult(Float(arc4random_uniform(100)) * 0.01 * 12)
+                    
+                    let bullet = Vector(X: location.x, Y: location.y)
+                    bullet.add(distance)
+                    distance.norm()
+                    
+                    bullets.append(Bullet(start: Vector(X: bullet.x, Y: bullet.y), heading: Vector(X: distance.x, Y: distance.y)))
+                }
             }
             
             for var bullet=0; bullet < bullets.count; bullet++ {
