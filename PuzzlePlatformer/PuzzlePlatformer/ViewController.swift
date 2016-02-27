@@ -276,7 +276,6 @@ class ViewController: UIViewController {
             levels[levels.count-1].addItem(Item(l: Vector(X: 21, Y: -70), a: Float(M_PI*0.5), t: "spike"))
             levels[levels.count-1].addItem(Item(l: Vector(X: 21, Y: -60), a: Float(M_PI*0.5), t: "spike"))
             levels[levels.count-1].addItem(Item(l: Vector(X: 70, Y: 69), a: 0, t: "spike"))
-            levels[levels.count-1].addItem(Item(l: Vector(X: 10, Y: 61), a: Float(M_PI), t: "spike"))
             levels[levels.count-1].addItem(Item(l: Vector(X: 34, Y: 149), a: 0, t: "spike"))
             levels[levels.count-1].addItem(Item(l: Vector(X: 44, Y: 149), a: 0, t: "spike"))
             levels[levels.count-1].addItem(Item(l: Vector(X: 54, Y: 149), a: 0, t: "spike"))
@@ -360,7 +359,7 @@ class ViewController: UIViewController {
             levels[levels.count-1].addItem(Item(l: Vector(X: 50, Y: 9), a: 0, t: "door"))
             levels[levels.count-1].addItem(Item(l: Vector(X: -90, Y: -31), a: 0, t: "door"))
         
-        //————————————————————————————————————————————————————————————————— 14: Alignment introduction
+        //————————————————————————————————————————————————————————————————— 14: Fountain
         levels.append(Level(start: Vector(X: -100, Y: -200), rotates: true))
             levels[levels.count-1].addIsland(Island(l: Vector(X: -100, Y: -150), v: "-40,0 40,0 40,10 0,40 -40,10", rotates: true, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: -25, Y: -140), v: "-30,-10 30,-10 30,10 -30,10", rotates: false, slides: false))
@@ -460,7 +459,7 @@ class ViewController: UIViewController {
             levels[levels.count-1].addItem(Item(l: Vector(X: 111, Y: 200), a: Float(M_PI*0.5), t: "door"))
             levels[levels.count-1].addItem(Item(l: Vector(X: -125, Y: 176), a: Float(M_PI), t: "door", k: 0))
         
-        //————————————————————————————————————————————————————————————————— 17: Spike hoops
+        //————————————————————————————————————————————————————————————————— 17: Skyscraper
         levels.append(Level(start: Vector(X: -10, Y: 45), rotates: true))
             levels[levels.count-1].addIsland(Island(l: Vector(X: 10, Y: 100), v: "-50,-10 50,-10 50,10 -50,10", rotates: false, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: -45, Y: 75), v: "-10,-35 10,-35 10,35 0,35 -10,25", rotates: false, slides: false))
@@ -500,7 +499,7 @@ class ViewController: UIViewController {
             levels[levels.count-1].addItem(Item(l: Vector(X: 25, Y: -76), a: 0, t: "door"))
             levels[levels.count-1].addItem(Item(l: Vector(X: -91, Y: -170), a: Float(M_PI*1.5), t: "door"))
         
-        //————————————————————————————————————————————————————————————————— 18: Align the Bridge
+        //————————————————————————————————————————————————————————————————— 18: Bridge
         levels.append(Level(start: Vector(X: -90, Y: -120), rotates: true))
             levels[levels.count-1].addIsland(Island(l: Vector(X: -80, Y: -100), v: "-25,0 25,0 25,10 0,25 -25,10", rotates: true, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: -80, Y: 100), v: "-25,0 25,0 25,10 0,25 -25,10", rotates: true, slides: false))
@@ -545,12 +544,41 @@ class ViewController: UIViewController {
             levels[levels.count-1].addItem(Item(l: Vector(X: -120, Y: -116), a: 0, t: "door"))
         
         //————————————————————————————————————————————————————————————————— 20: Trap-door
+        levels.append(Level(start: Vector(X: 80, Y: 105), rotates: true))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 80, Y: 130), v: "-30,-10 40,-10 40,10 -30,10", rotates: false, slides: false))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 120, Y: 5), v: "-10,-185 10,-185 10,135 -10,135", rotates: false, slides: false))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 40, Y: 5), v: "-10,-145 10,-145 10,135 -10,135", rotates: false, slides: false))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 105, Y: -185), v: "-15,-5 -15,-25 -5,-25 25,5 25,15 5,15", rotates: false, slides: false))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 0, Y: -200), v: "-100,-10 100,-10 100,10 -100,10", rotates: false, slides: false))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 0, Y: -145), v: "-50,-10 50,-10 50,10 -50,10", rotates: false, slides: false))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 0, Y: 65), v: "-50,-10 40,-10 40,10 -50,10", rotates: false, slides: false))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 0, Y: -20), v: "-50,20 40,-60 40,40 -40,40 -50,35", rotates: false, slides: false))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: -75, Y: -100), v: "-35,-40 -25,-50 25,-50 25,50 -25,50 -35,40", rotates: false, slides: true, railStart: Vector(X: -75, Y: -125), railEnd: Vector(X: -75, Y: 90)))
+        
+            levels[levels.count-1].addItem(Item(l: Vector(X: -85, Y: -151), a: 0, t: "spike", d: 8))
+            levels[levels.count-1].addItem(Item(l: Vector(X: -65, Y: -151), a: 0, t: "spike", d: 8))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 109, Y: 20), a: Float(M_PI*1.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 109, Y: 35), a: Float(M_PI*1.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 109, Y: 50), a: Float(M_PI*1.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 109, Y: 65), a: Float(M_PI*1.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 51, Y: -130), a: Float(M_PI*0.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 51, Y: -115), a: Float(M_PI*0.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 51, Y: -100), a: Float(M_PI*0.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 51, Y: -85), a: Float(M_PI*0.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 51, Y: -70), a: Float(M_PI*0.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 51, Y: -55), a: Float(M_PI*0.5), t: "spike"))
+        
+            levels[levels.count-1].addItem(Item(l: Vector(X: 100, Y: 141), a: Float(M_PI), t: "door"))
         
         //————————————————————————————————————————————————————————————————— 21: Boat
         
-        //————————————————————————————————————————————————————————————————— 22: Falling Sideways
+        //————————————————————————————————————————————————————————————————— 22: Train
         
-        //————————————————————————————————————————————————————————————————— 23: Wound Chain
+        //————————————————————————————————————————————————————————————————— 23: Antennae
+        
+        //————————————————————————————————————————————————————————————————— 24: Shell
+        
+        //————————————————————————————————————————————————————————————————— 25: Intrusion
     }
     
     func createButtons() {
