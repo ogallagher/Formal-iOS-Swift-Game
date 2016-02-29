@@ -118,13 +118,13 @@ The project, from a programming perspective…
 - [ ] Add islands that slide with another dock island
 - [ ] Change movement to not move in relation to touched sliding ground (if ground slides, add ground velocity to player.velocity)
 - [ ] Levels that "connect" to each other...?
-- [x] Level: sliding hatch, no gravity rotation
-- [ ] Level: sliding U
-- [ ] Level: looks like a seashell
+- [x] Level: guillotine, no gravity rotation
+- [ ] Level: boat
+- [ ] Level: hatch
 - [x] Level: static obstacle course
-- [x] Level: finish the rotating bridge
-- [ ] Level: sliding obstacle course
-- [ ] Level: sliding + G-switch
+- [x] Level: bridge
+- [ ] Level: train
+- [ ] Level: shell
 - [x] Change bullets to circles (the rigid polygon collisions aren't worth the extra time to process, I think)
 - [x] Create new bullet class based upon point-line collision
 - [x] Fix bullet glitch; they seem to be colliding with the wrong coordinates. POSSIBLE PROBLEM: using the same vector names for different calculations effects previous calculations?
@@ -201,4 +201,6 @@ The project, from a programming perspective…
 - [ ] Level: intrusion (first turret level)
 - [x] Edit turrets so they only shoot within π/2 radians of their eye (so they don’t shoot through the ground on which they sit)
 - [x] Make the player die if crushed by a sliding block? (touching wall on opposite sides, with at least 1 being a sliding block) OR make levels so crushing never happens (edit rail, add spikes)
+- [ ] Check if appearing islands are redrawn after they finish growing
+- [x] Add spikes to corridor in level 20 
 
