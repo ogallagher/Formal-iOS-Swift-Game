@@ -134,9 +134,10 @@ class Island {
     var rail: [Vector] = []
     var anchorIsland: Int? = nil
     var key: Int? = nil
+    var dock: Int? = nil
     var timer: Int? = nil
     
-    init(l: Vector, v: String, rotates: Bool, slides: Bool, railStart: Vector? = nil, railEnd: Vector? = nil, pivotNum: Int? = nil, keyNum: Int? = nil) {
+    init(l: Vector, v: String, rotates: Bool, slides: Bool, railStart: Vector? = nil, railEnd: Vector? = nil, pivotNum: Int? = nil, dockNum: Int? = nil, keyNum: Int? = nil) {
         location = Vector(X: centerX + l.x, Y: centerY + l.y)
         angle = 0
         angleV = 0
@@ -152,17 +153,22 @@ class Island {
         
         canSlide = slides
         
-        if canSlide && railStart != nil && railEnd != nil {
-            let railStartPosition = Vector(X: centerX, Y: centerY)
-            let railEndPosition = Vector(X: centerX, Y: centerY)
-            
-            railStartPosition.add(railStart!)
-            rail.append(railStartPosition)                                     //bound1
-            
-            railEndPosition.add(railEnd!)
-            rail.append(railEndPosition)                                       //bound2
-            
-            rail.append(Vector(X: 0, Y: 0))                                    //velocity parallel to the rail
+        if canSlide {
+            if railStart != nil && railEnd != nil {
+                let railStartPosition = Vector(X: centerX, Y: centerY)
+                let railEndPosition = Vector(X: centerX, Y: centerY)
+                
+                railStartPosition.add(railStart!)
+                rail.append(railStartPosition)                                     //bound1
+                
+                railEndPosition.add(railEnd!)
+                rail.append(railEndPosition)                                       //bound2
+                
+                rail.append(Vector(X: 0, Y: 0))                                    //velocity parallel to the rail
+            }
+            else if dockNum != nil {
+                dock = dockNum
+            }
         }
         
         if canRotate &&  pivotNum != nil {
@@ -243,41 +249,46 @@ class Island {
     }
     
     func slide() {
-        if canSlide && rail.count > 0 {
-            let railLine = Vector(X: rail[0].x, Y: rail[0].y)
-            railLine.sub(rail[1])
-            
-            let acceleration = Vector(X: gravity.x, Y: gravity.y)
-            acceleration.mult(0.05)
-            rail[2].add(acceleration)
-            
-            if angleBetween(railLine, vector2: rail[2]) > Float(M_PI * 0.5) {
-                railLine.mult(-1)
+        if canSlide {
+            if rail.count > 0 {
+                let railLine = Vector(X: rail[0].x, Y: rail[0].y)
+                railLine.sub(rail[1])
+                
+                let acceleration = Vector(X: gravity.x, Y: gravity.y)
+                acceleration.mult(0.05)
+                rail[2].add(acceleration)
+                
+                if angleBetween(railLine, vector2: rail[2]) > Float(M_PI * 0.5) {
+                    railLine.mult(-1)
+                }
+                
+                let railAngle = angleBetween(railLine, vector2: rail[2])
+                let magnitude = rail[2].mag()
+                
+                rail[2].set(railLine)
+                rail[2].norm()
+                rail[2].mult(cos(railAngle) * magnitude * 0.95)
+                
+                let checkLine = Vector(X: location.x, Y: location.y)
+                checkLine.sub(rail[0])
+                if checkLine.mag() > railLine.mag() {
+                    checkLine.set(rail[1])
+                    checkLine.sub(location)
+                    rail[2].set(checkLine)
+                }
+                checkLine.set(location)
+                checkLine.sub(rail[1])
+                if checkLine.mag() > railLine.mag() {
+                    checkLine.set(rail[0])
+                    checkLine.sub(location)
+                    rail[2].set(checkLine)
+                }
+                
+                location.add(rail[2])
             }
-            
-            let railAngle = angleBetween(railLine, vector2: rail[2])
-            let magnitude = rail[2].mag()
-            
-            rail[2].set(railLine)
-            rail[2].norm()
-            rail[2].mult(cos(railAngle) * magnitude * 0.95)
-            
-            let checkLine = Vector(X: location.x, Y: location.y)
-            checkLine.sub(rail[0])
-            if checkLine.mag() > railLine.mag() {
-                checkLine.set(rail[1])
-                checkLine.sub(location)
-                rail[2].set(checkLine)
+            else if dock != nil {
+                location.add(levels[level].islands[dock!].rail[2])
             }
-            checkLine.set(location)
-            checkLine.sub(rail[1])
-            if checkLine.mag() > railLine.mag() {
-                checkLine.set(rail[0])
-                checkLine.sub(location)
-                rail[2].set(checkLine)
-            }
-            
-            location.add(rail[2])
         }
     }
     

@@ -4,9 +4,9 @@ This is an iOS game, written with Swift, for multiple screen dimensions.
 
 #Description
 A difficult platformer with some unique features:
-> Incorporates the device orientation heavily to control in-game gravity
+> Incorporates the device orientation heavily to control in-game gravity (so you'll end up holding your device upside-down more than most apps require)
 
-> Most features in the levels are controlled by the gravity
+> Most features in the levels are controlled by gravity
 
 > The avatar can only be moved when touching ground
 
@@ -22,6 +22,8 @@ The project, from a programming perspective…
 >> The RigidPolygon class is what I’m using to make the blue square respond to outside forces both translationally and rotationally, which took me a while to create. The only improvement I might add would be to incorporate polygon-edge-with-neighboring-corner collision, but doing that isn’t worth it for how I’m using it.
 
 >> The Vector class is what I’m using to do all the vector math in the project. Other’s have probably also made Vector classes for swift projects, but I had a hard time finding anything that I wanted to use. It’s been tested thoroughly through this game, so it should be good to use in another project
+
+> Has room for improvement. For example, the method I use for collosion between the player and surrounding islands is not perfect, and there is a glitch I haven't been able to fix, where the level selection buttons can overlap if swiped too fast.
 
 
 #To-Do List
@@ -111,17 +113,17 @@ The project, from a programming perspective…
 - [ ] Perhaps add in fps limiter (like in MultTest)?
 - [x] Level: 2PI, 2SI, spikes
 - [x] Add increased friction when touching ground
-- [ ] Add switch to enable rotating gravity
+- [ ] Add switch to enable rotating gravity? I haven't made a level with this yet, though.
 - [x] Add turrets that shoot little red triangles
 - [x] Add bullet class, a subclass of RigidPolygon to be shot from turrets
 - [x] Add shrapnel class, which just ejects from a given point
-- [ ] Add islands that slide with another dock island
-- [ ] Change movement to not move in relation to touched sliding ground (if ground slides, add ground velocity to player.velocity)
+- [x] Add islands that slide with another dock island
+- [ ] Change movement to not move in relation to touched sliding ground (if ground slides, add island.velocity to player.velocity)
 - [ ] Levels that "connect" to each other...?
-- [x] Level: guillotine, no gravity rotation
+- [x] Level: guillotine
 - [ ] Level: boat
-- [ ] Level: hatch
-- [x] Level: static obstacle course
+- [x] Level: hatch
+- [x] Level: telescope
 - [x] Level: bridge
 - [ ] Level: train
 - [ ] Level: shell
@@ -144,7 +146,7 @@ The project, from a programming perspective…
 - [x] Create a better continue button (door on level 0)
 - [x] Edit scaling methods so the view’s center is moved down until the bottom of the view is the bottom of the screen.
 - [x] Fix level skipping glitch, where a level is unlocked but doesn’t exist
-- [ ] Perhaps input rotation relational friction into pivoting islands as well ?
+- [ ] Perhaps input rotation relational friction into pivoting islands as well?
 - [x] Translate + scale buttons, actually (their locations and ranges need to change for accurate interaction)
 - [x] Scale buttons, visually (because their increased spacing needs to be coupled with increased print size)
 - [x] Translate items (hooked to centerX,centerY)
@@ -187,11 +189,14 @@ The project, from a programming perspective…
 - [x] Test pivoting anchored islands (the anchor location detection might be thrown off…)
 - [x] Test new death boundaries
 - [x] Mark gameplay view frame in StaticView
-- [ ] What should I do with the opened menu space?
+- [ ] What should I do with the opened menu space? POSSIBILITIES: Show level # and name
 - [x] Fix sliding island positions (not centered around centerX and centerY?)
 - [x] Add level parameter which isolates deviceMotion.gravity general use and application to player’s gravity
 - [x] Use new parameter for level 19
-- [ ] Create new rotation indicators for: no rotation, rotation but not for gravity, and gravity switches (the last of which I haven't created)
+- [ ] Create new rotation indicators for: 
+- [ ] — no rotation (shows direction of gravity)
+- [ ] — rotation but not for gravity
+- [ ] - gravity switches
 - [ ] Add coins to areas in levels that are difficult to reach, though not necessary to continue? What would the coins do, then, if anything?
 - [x] Add sliding items (move according to a dock island’s velocity)
 - [ ] Add text to level 19
@@ -203,4 +208,8 @@ The project, from a programming perspective…
 - [x] Make the player die if crushed by a sliding block? (touching wall on opposite sides, with at least 1 being a sliding block) OR make levels so crushing never happens (edit rail, add spikes)
 - [ ] Check if appearing islands are redrawn after they finish growing
 - [x] Add spikes to corridor in level 20 
+- [ ] Add gravity switches (cardinal directions)
+- [ ] Add text to level 20
+- [ ] Test islands that slide w/ another dock island
+- [ ] Check how to make the app size better for iPads
 

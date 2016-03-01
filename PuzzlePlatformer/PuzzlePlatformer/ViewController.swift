@@ -543,7 +543,7 @@ class ViewController: UIViewController {
         
             levels[levels.count-1].addItem(Item(l: Vector(X: -120, Y: -116), a: 0, t: "door"))
         
-        //————————————————————————————————————————————————————————————————— 20: Trap-door
+        //————————————————————————————————————————————————————————————————— 20: Hatch
         levels.append(Level(start: Vector(X: 80, Y: 105), rotates: true))
             levels[levels.count-1].addIsland(Island(l: Vector(X: 80, Y: 130), v: "-30,-10 40,-10 40,10 -30,10", rotates: false, slides: false))
             levels[levels.count-1].addIsland(Island(l: Vector(X: 120, Y: 5), v: "-10,-185 10,-185 10,135 -10,135", rotates: false, slides: false))
