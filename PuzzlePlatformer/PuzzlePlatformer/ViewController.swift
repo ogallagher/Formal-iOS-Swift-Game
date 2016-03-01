@@ -80,7 +80,7 @@ class ViewController: UIViewController {
         }
         centerX = Float(screenWidth)/2
         
-        NSUserDefaults.standardUserDefaults().setObject(18, forKey: "highestLevel") //Last completed level
+        NSUserDefaults.standardUserDefaults().setObject(20, forKey: "highestLevel") //Last completed level
         
         let saveData = NSUserDefaults.standardUserDefaults()
         highestLevel = saveData.integerForKey("highestLevel")
@@ -582,6 +582,23 @@ class ViewController: UIViewController {
             levels[levels.count-1].addItem(Item(l: Vector(X: 100, Y: 141), a: Float(M_PI), t: "door"))
         
         //————————————————————————————————————————————————————————————————— 21: Boat
+        levels.append(Level(start: Vector(X: 90, Y: 100), rotates: true))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 90, Y: 140), v: "-40,-20 40,-20 40,10 30,20 -30,20 -40,10", rotates: false, slides: true, railStart: Vector(X: -120, Y: 140), railEnd: Vector(X: 120, Y: 140)))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 57, Y: 90), v: "-7,-30 7,-30 7,30 -7,30", rotates: false, slides: true, dockNum: 0))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 123, Y: 90), v: "-7,-30 7,-30 7,30 -7,30", rotates: false, slides: true, dockNum: 0))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 153, Y: -60), v: "-7,-120 7,-120 7,120 -7,120", rotates: false, slides: false))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 0, Y: -60), v: "-7,-120 7,-120 7,120 -7,120", rotates: false, slides: false))
+            levels[levels.count-1].addIsland(Island(l: Vector(X: 85, Y: -60), v: "-10,-30 10,-30 10,30 -10,30", rotates: false, slides: true, railStart: Vector(X: 32, Y: -60), railEnd: Vector(X: 121, Y: -60)))
+        
+            levels[levels.count-1].addItem(Item(l: Vector(X: -8, Y: -160), a: Float(M_PI*1.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: -8, Y: -145), a: Float(M_PI*1.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: -8, Y: -130), a: Float(M_PI*1.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: -8, Y: -115), a: Float(M_PI*1.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: -8, Y: -100), a: Float(M_PI*1.5), t: "spike"))
+            levels[levels.count-1].addItem(Item(l: Vector(X: -8, Y: -85), a: Float(M_PI*1.5), t: "spike"))
+        
+            levels[levels.count-1].addItem(Item(l: Vector(X: 90, Y: 161), a: Float(M_PI), t: "door", d: 0))
+            levels[levels.count-1].addItem(Item(l: Vector(X: 145, Y: -165), a: Float(M_PI*1.5), t: "door"))
         
         //————————————————————————————————————————————————————————————————— 22: Train
         
@@ -1121,7 +1138,7 @@ class StaticView: UIView {
                 CGContextAddLineToPoint(context, CGFloat(lX + island.vertices[0].x*scale), CGFloat(lY + island.vertices[0].y*scale))
                 CGContextFillPath(context)
             }
-            else if island.canSlide && island.key == nil {
+            else if island.canSlide && island.rail.count > 0 && island.key == nil {
                 UIColor.grayColor().set()
                 CGContextMoveToPoint(context, CGFloat(island.rail[0].x * scale), CGFloat(island.rail[0].y * scale))
                 CGContextAddLineToPoint(context, CGFloat(island.rail[1].x * scale), CGFloat(island.rail[1].y * scale))

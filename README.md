@@ -123,7 +123,7 @@ The project, from a programming perspective…
 - [x] Level: guillotine
 - [ ] Level: boat
 - [x] Level: hatch
-- [x] Level: telescope
+- [x] Level: skyscraper
 - [x] Level: bridge
 - [ ] Level: train
 - [ ] Level: shell
@@ -210,6 +210,10 @@ The project, from a programming perspective…
 - [x] Add spikes to corridor in level 20 
 - [ ] Add gravity switches (cardinal directions)
 - [ ] Add text to level 20
-- [ ] Test islands that slide w/ another dock island
+- [x] Test islands that slide w/ another dock island
 - [ ] Check how to make the app size better for iPads
+- [x] Start level 21
+- [ ] Add text to level 21
+- [ ] Shrink the home button a bit
+- [ ] Create a pull-down menu in the upper right-hand corner that reveals the home button
 
