@@ -62,7 +62,7 @@ The project, from a programming perspective…
 - [x] Test rotating, sliding islands
 - [x] Rail skin
 - [x] Create a menu/home (title, choose level)
-- [ ] Choose game name
+- [x] Choose game name: Formal
 - [x] Title skin
 - [ ] Create background items in levels (for trees, bushes, clouds?, etc.) ? Now that the game is less focused on the environment, I might not do this.
 - [x] Create a button class (for levels, home)
@@ -79,7 +79,7 @@ The project, from a programming perspective…
 - [x] Start level design
 - [x] Start associated level skins
 - [x] Disable movement until first tap after each reset
-- [ ] Create game icon image
+- [x] Create game icon image
 - [x] Reduce lag from drawing: try splitting drawing into multiple UIViews on top of each other
 - [x] Create wraparound for level buttons
 - [x] Reduce lag from drawing: split up drawing into even more UIViews: ButtonView, StaticView (for level stuff that isn’t drawn every loop)
@@ -121,7 +121,7 @@ The project, from a programming perspective…
 - [ ] Change movement to not move in relation to touched sliding ground (if ground slides, add island.velocity to player.velocity)
 - [ ] Levels that "connect" to each other...?
 - [x] Level: guillotine
-- [ ] Level: boat
+- [x] Level: boat
 - [x] Level: hatch
 - [x] Level: skyscraper
 - [x] Level: bridge
@@ -213,7 +213,12 @@ The project, from a programming perspective…
 - [x] Test islands that slide w/ another dock island
 - [ ] Check how to make the app size better for iPads
 - [x] Start level 21
-- [ ] Add text to level 21
-- [ ] Shrink the home button a bit
-- [ ] Create a pull-down menu in the upper right-hand corner that reveals the home button
+- [x] Add text to level 21
+- [x] Shrink the home button a bit
+- [x] Create a pull-down menu in the upper right-hand corner that reveals the home button
+- [ ] Player dies if crushed by 2 islands
+- [ ] Fix bullets+shrapnel to have them always explode after (3?) collisions
+- [ ] Store levels in app's property list, so they aren't in the program's memory? Load each as demanded?
+- [ ] Move level 14, make it rotate not for gravity, change text
+- [x] Fix glitch that arose when creating the pull-menu for the home button (now the player doesn't move at all!) >: (
 

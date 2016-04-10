@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6F6BFBD11C0341D000E3C571 /* Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6BFBD01C0341D000E3C571 /* Library.swift */; };
+		6FA39F2D1CB893950094BED6 /* Levels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA39F2C1CB893950094BED6 /* Levels.swift */; };
 		6FA4524F1BFAAB940047DCFF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA4524E1BFAAB940047DCFF /* AppDelegate.swift */; };
 		6FA452511BFAAB940047DCFF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA452501BFAAB940047DCFF /* ViewController.swift */; };
 		6FA452541BFAAB950047DCFF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA452521BFAAB950047DCFF /* Main.storyboard */; };
@@ -26,15 +27,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6F6BFBD01C0341D000E3C571 /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; };
-		6FA4524B1BFAAB940047DCFF /* PuzzlePlatformer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PuzzlePlatformer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F6BFBD01C0341D000E3C571 /* Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Library.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		6FA39F2C1CB893950094BED6 /* Levels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Levels.swift; sourceTree = "<group>"; };
+		6FA4524B1BFAAB940047DCFF /* Formal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Formal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FA4524E1BFAAB940047DCFF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6FA452501BFAAB940047DCFF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		6FA452531BFAAB950047DCFF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6FA452551BFAAB950047DCFF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6FA452581BFAAB950047DCFF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6FA4525A1BFAAB950047DCFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6FA4525F1BFAAB950047DCFF /* PuzzlePlatformerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PuzzlePlatformerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FA4525F1BFAAB950047DCFF /* Formal.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Formal.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +68,8 @@
 		6FA4524C1BFAAB940047DCFF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6FA4524B1BFAAB940047DCFF /* PuzzlePlatformer.app */,
-				6FA4525F1BFAAB950047DCFF /* PuzzlePlatformerTests.xctest */,
+				6FA4524B1BFAAB940047DCFF /* Formal.app */,
+				6FA4525F1BFAAB950047DCFF /* Formal.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -76,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				6FA4524E1BFAAB940047DCFF /* AppDelegate.swift */,
+				6FA39F2C1CB893950094BED6 /* Levels.swift */,
 				6F6BFBD01C0341D000E3C571 /* Library.swift */,
 				6FA452501BFAAB940047DCFF /* ViewController.swift */,
 				6FA452521BFAAB950047DCFF /* Main.storyboard */,
@@ -89,9 +92,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6FA4524A1BFAAB940047DCFF /* PuzzlePlatformer */ = {
+		6FA4524A1BFAAB940047DCFF /* Formal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6FA452681BFAAB950047DCFF /* Build configuration list for PBXNativeTarget "PuzzlePlatformer" */;
+			buildConfigurationList = 6FA452681BFAAB950047DCFF /* Build configuration list for PBXNativeTarget "Formal" */;
 			buildPhases = (
 				6FA452471BFAAB940047DCFF /* Sources */,
 				6FA452481BFAAB940047DCFF /* Frameworks */,
@@ -101,14 +104,14 @@
 			);
 			dependencies = (
 			);
-			name = PuzzlePlatformer;
+			name = Formal;
 			productName = PuzzlePlatformer;
-			productReference = 6FA4524B1BFAAB940047DCFF /* PuzzlePlatformer.app */;
+			productReference = 6FA4524B1BFAAB940047DCFF /* Formal.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6FA4525E1BFAAB950047DCFF /* PuzzlePlatformerTests */ = {
+		6FA4525E1BFAAB950047DCFF /* FormalTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6FA4526B1BFAAB950047DCFF /* Build configuration list for PBXNativeTarget "PuzzlePlatformerTests" */;
+			buildConfigurationList = 6FA4526B1BFAAB950047DCFF /* Build configuration list for PBXNativeTarget "FormalTests" */;
 			buildPhases = (
 				6FA4525B1BFAAB950047DCFF /* Sources */,
 				6FA4525C1BFAAB950047DCFF /* Frameworks */,
@@ -119,9 +122,9 @@
 			dependencies = (
 				6FA452611BFAAB950047DCFF /* PBXTargetDependency */,
 			);
-			name = PuzzlePlatformerTests;
+			name = FormalTests;
 			productName = PuzzlePlatformerTests;
-			productReference = 6FA4525F1BFAAB950047DCFF /* PuzzlePlatformerTests.xctest */;
+			productReference = 6FA4525F1BFAAB950047DCFF /* Formal.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -145,7 +148,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6FA452461BFAAB940047DCFF /* Build configuration list for PBXProject "PuzzlePlatformer" */;
+			buildConfigurationList = 6FA452461BFAAB940047DCFF /* Build configuration list for PBXProject "Formal" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -158,8 +161,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6FA4524A1BFAAB940047DCFF /* PuzzlePlatformer */,
-				6FA4525E1BFAAB950047DCFF /* PuzzlePlatformerTests */,
+				6FA4524A1BFAAB940047DCFF /* Formal */,
+				6FA4525E1BFAAB950047DCFF /* FormalTests */,
 			);
 		};
 /* End PBXProject section */
@@ -191,6 +194,7 @@
 			files = (
 				6FA452511BFAAB940047DCFF /* ViewController.swift in Sources */,
 				6FA4524F1BFAAB940047DCFF /* AppDelegate.swift in Sources */,
+				6FA39F2D1CB893950094BED6 /* Levels.swift in Sources */,
 				6F6BFBD11C0341D000E3C571 /* Library.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -207,7 +211,7 @@
 /* Begin PBXTargetDependency section */
 		6FA452611BFAAB950047DCFF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6FA4524A1BFAAB940047DCFF /* PuzzlePlatformer */;
+			target = 6FA4524A1BFAAB940047DCFF /* Formal */;
 			targetProxy = 6FA452601BFAAB950047DCFF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -318,11 +322,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = PuzzlePlatformer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.PuzzlePlatformer;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Formal;
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -332,11 +338,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = PuzzlePlatformer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.PuzzlePlatformer;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Formal;
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -349,8 +357,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.PuzzlePlatformerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PuzzlePlatformer.app/PuzzlePlatformer";
+				PRODUCT_NAME = Formal;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Formal.app/Formal";
 			};
 			name = Debug;
 		};
@@ -362,15 +370,15 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.PuzzlePlatformerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PuzzlePlatformer.app/PuzzlePlatformer";
+				PRODUCT_NAME = Formal;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Formal.app/Formal";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6FA452461BFAAB940047DCFF /* Build configuration list for PBXProject "PuzzlePlatformer" */ = {
+		6FA452461BFAAB940047DCFF /* Build configuration list for PBXProject "Formal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6FA452661BFAAB950047DCFF /* Debug */,
@@ -379,7 +387,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6FA452681BFAAB950047DCFF /* Build configuration list for PBXNativeTarget "PuzzlePlatformer" */ = {
+		6FA452681BFAAB950047DCFF /* Build configuration list for PBXNativeTarget "Formal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6FA452691BFAAB950047DCFF /* Debug */,
@@ -388,7 +396,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6FA4526B1BFAAB950047DCFF /* Build configuration list for PBXNativeTarget "PuzzlePlatformerTests" */ = {
+		6FA4526B1BFAAB950047DCFF /* Build configuration list for PBXNativeTarget "FormalTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6FA4526C1BFAAB950047DCFF /* Debug */,

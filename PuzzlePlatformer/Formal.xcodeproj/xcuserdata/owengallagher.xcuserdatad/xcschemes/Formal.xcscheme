@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6FA4524A1BFAAB940047DCFF"
-               BuildableName = "PuzzlePlatformer.app"
-               BlueprintName = "PuzzlePlatformer"
-               ReferencedContainer = "container:PuzzlePlatformer.xcodeproj">
+               BuildableName = "Formal.app"
+               BlueprintName = "Formal"
+               ReferencedContainer = "container:Formal.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6FA4525E1BFAAB950047DCFF"
-               BuildableName = "PuzzlePlatformerTests.xctest"
-               BlueprintName = "PuzzlePlatformerTests"
-               ReferencedContainer = "container:PuzzlePlatformer.xcodeproj">
+               BuildableName = "Formal.xctest"
+               BlueprintName = "FormalTests"
+               ReferencedContainer = "container:Formal.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6FA4524A1BFAAB940047DCFF"
-            BuildableName = "PuzzlePlatformer.app"
-            BlueprintName = "PuzzlePlatformer"
-            ReferencedContainer = "container:PuzzlePlatformer.xcodeproj">
+            BuildableName = "Formal.app"
+            BlueprintName = "Formal"
+            ReferencedContainer = "container:Formal.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -66,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6FA4524A1BFAAB940047DCFF"
-            BuildableName = "PuzzlePlatformer.app"
-            BlueprintName = "PuzzlePlatformer"
-            ReferencedContainer = "container:PuzzlePlatformer.xcodeproj">
+            BuildableName = "Formal.app"
+            BlueprintName = "Formal"
+            ReferencedContainer = "container:Formal.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -85,9 +85,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6FA4524A1BFAAB940047DCFF"
-            BuildableName = "PuzzlePlatformer.app"
-            BlueprintName = "PuzzlePlatformer"
-            ReferencedContainer = "container:PuzzlePlatformer.xcodeproj">
+            BuildableName = "Formal.app"
+            BlueprintName = "Formal"
+            ReferencedContainer = "container:Formal.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
