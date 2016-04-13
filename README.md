@@ -1,4 +1,4 @@
-# PuzzlePlatformer-iOS-Game
+# Formal
 This is an iOS game, written with Swift, for multiple screen dimensions.
 
 
@@ -12,18 +12,20 @@ A difficult platformer with some unique features:
 
 > All graphics are drawn with CGGraphicsContext
 
-> It's not finished; I haven't even thought of a name for it yet. It's on my to-do list.
+> It's not finished
+
+> There are currently 21 levels
 
 
 The project, from a programming perspective…
 > Was written in Swift
 
-> Has some useful classes that I created. I recommend taking a look at PuzzlePlatformer-iOS-Game/PuzzlePlatformer/PuzzlePlatformer/Library.swift for them
+> Has some useful classes that I created. I recommend taking a look at Formal-iOS-Swift-Game/PuzzlePlatformer/PuzzlePlatformer/Library.swift for them
 >> The RigidPolygon class is what I’m using to make the blue square respond to outside forces both translationally and rotationally, which took me a while to create. The only improvement I might add would be to incorporate polygon-edge-with-neighboring-corner collision, but doing that isn’t worth it for how I’m using it.
 
 >> The Vector class is what I’m using to do all the vector math in the project. Other’s have probably also made Vector classes for swift projects, but I had a hard time finding anything that I wanted to use. It’s been tested thoroughly through this game, so it should be good to use in another project
 
-> Has room for improvement. For example, the method I use for collosion between the player and surrounding islands is not perfect, and there is a glitch I haven't been able to fix, where the level selection buttons can overlap if swiped too fast.
+> Has room for improvement. For example, the method I use for collision between the player and surrounding islands is not perfect, and there is a glitch I haven't been able to fix, where the level selection buttons can overlap if swiped too fast. See the To-Do List for some glitches that have been solved are have yet to be solved.
 
 
 #To-Do List
@@ -189,7 +191,7 @@ The project, from a programming perspective…
 - [x] Test pivoting anchored islands (the anchor location detection might be thrown off…)
 - [x] Test new death boundaries
 - [x] Mark gameplay view frame in StaticView
-- [ ] What should I do with the opened menu space? POSSIBILITIES: Show level # and name
+- [ ] What should I do with the opened menu space? POSSIBILITIES: Show level # and name (make the text fill space?)
 - [x] Fix sliding island positions (not centered around centerX and centerY?)
 - [x] Add level parameter which isolates deviceMotion.gravity general use and application to player’s gravity
 - [x] Use new parameter for level 19
@@ -218,7 +220,19 @@ The project, from a programming perspective…
 - [x] Create a pull-down menu in the upper right-hand corner that reveals the home button
 - [ ] Player dies if crushed by 2 islands
 - [ ] Fix bullets+shrapnel to have them always explode after (3?) collisions
-- [ ] Store levels in app's property list, so they aren't in the program's memory? Load each as demanded?
+- [ ] Store levels in external file, so they aren't in the program's memory? Load each as demanded?
+- [ ] — Look up string functions in Swift (important: split string by character, get string between two tags).
+- [ ] — System for storage:
+- [ ] —— Create a text file with all the level information
+- [ ] ——— Syntax = split levels by '\n', split level objects by '+', extract object info between /\ () <> {}
+- [ ] ———— An example level: "5,Name+(0,0)<1,1 2,2 3,3>{0,0,-1,0}+/spike\(0,0)<1>{0}+/door\(0,0)<0.5>{}\n"
+- [ ] —— When a level is requested, find the level in the text file with that number and store it.
+- [ ] —— Only store one level at a time in the program.
 - [ ] Move level 14, make it rotate not for gravity, change text
 - [x] Fix glitch that arose when creating the pull-menu for the home button (now the player doesn't move at all!) >: (
+- [x] Fix movement so swipes are not stored
+- [ ] Fix spikes so their action sites match their positions OR decrease touchingGround areas around blocks (or both)
+- [ ] Try introducing multiple touches: touch w/ 3 fingers to pause, double-tap on a level # to select, remove confirmation button at bottom of menu
+- [ ] Help menu
+- [ ] Resize main menu after removing the confirmation button (green arrow)
 

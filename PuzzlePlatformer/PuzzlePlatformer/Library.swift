@@ -19,7 +19,6 @@ class Player: RigidPolygon {
     }
     
     func flickForce() {
-        print("flicked")
         if !startMoving {
             startMoving = true
         }
@@ -81,6 +80,9 @@ class Player: RigidPolygon {
     func control() {
         if touchingSurface && !flick.equals(Vector(X: 0, Y: 0)) {
             velocity.set(flick)
+            flick.mult(0)
+        }
+        else if !touchingSurface {
             flick.mult(0)
         }
     }

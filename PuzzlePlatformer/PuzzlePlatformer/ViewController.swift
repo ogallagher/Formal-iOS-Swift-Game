@@ -79,8 +79,6 @@ class ViewController: UIViewController {
         }
         centerX = Float(screenWidth)/2
         
-        NSUserDefaults.standardUserDefaults().setObject(0, forKey: "highestLevel") //Last completed level
-        
         let saveData = NSUserDefaults.standardUserDefaults()
         highestLevel = saveData.integerForKey("highestLevel")
         beatenLevels = saveData.stringForKey("beatenLevels")
