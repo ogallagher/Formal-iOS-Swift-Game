@@ -14,6 +14,7 @@
 		6FA452541BFAAB950047DCFF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA452521BFAAB950047DCFF /* Main.storyboard */; };
 		6FA452561BFAAB950047DCFF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FA452551BFAAB950047DCFF /* Assets.xcassets */; };
 		6FA452591BFAAB950047DCFF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA452571BFAAB950047DCFF /* LaunchScreen.storyboard */; };
+		6FC98CEA1CC076E200D0F93B /* formalLevels.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6FC98CE91CC076E200D0F93B /* formalLevels.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		6FA452581BFAAB950047DCFF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6FA4525A1BFAAB950047DCFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FA4525F1BFAAB950047DCFF /* Formal.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Formal.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FC98CE91CC076E200D0F93B /* formalLevels.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = formalLevels.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				6FA4524E1BFAAB940047DCFF /* AppDelegate.swift */,
+				6FC98CE91CC076E200D0F93B /* formalLevels.txt */,
 				6FA39F2C1CB893950094BED6 /* Levels.swift */,
 				6F6BFBD01C0341D000E3C571 /* Library.swift */,
 				6FA452501BFAAB940047DCFF /* ViewController.swift */,
@@ -174,6 +177,7 @@
 			files = (
 				6FA452591BFAAB950047DCFF /* LaunchScreen.storyboard in Resources */,
 				6FA452561BFAAB950047DCFF /* Assets.xcassets in Resources */,
+				6FC98CEA1CC076E200D0F93B /* formalLevels.txt in Resources */,
 				6FA452541BFAAB950047DCFF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

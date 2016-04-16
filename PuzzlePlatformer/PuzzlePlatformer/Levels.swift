@@ -8,14 +8,93 @@
 
 import Foundation
 
+func readLevel(i: Int) {
+    //change: set level variable to a level object, which is set to the current level and has a name and id (no longer a levels array)
+    
+    do {
+        let levelFileString = try String(contentsOfFile: levelFile!)
+        let levelString = levelFileString.componentsSeparatedByString("\n")[i]
+        let levelObjects: [String] = levelString.componentsSeparatedByString("+")
+        var summary: [String] = []
+        var islands: [Island] = []
+        var items: [Item] = []
+        
+        print("READING LEVEL[" + String(i) + "]...")
+        
+        for levelObject in levelObjects {
+            if levelObject.rangeOfString("=") == nil {
+                print("\tSUMMARY: " + levelObject)
+                summary = levelObject.componentsSeparatedByString(",")
+            }
+            else {
+                let objectData = levelObject.componentsSeparatedByString("=")
+                
+                if objectData[0] == "island" {
+                    let locations = objectData[1].componentsSeparatedByString(",")
+                    let location = Vector(X: Float(locations[0])!, Y: Float(locations[1])!)
+                    
+                    if (objectData.count == 4) {
+                        let aspects = objectData[3].componentsSeparatedByString(",") //MAX = 7: rotates,slides,rail1,rail2,pivot,dock,key
+                        
+                        if aspects[1].toBool()! {
+                            let rails1 = aspects[2].componentsSeparatedByString(",")
+                            let rails2 = aspects[3].componentsSeparatedByString(",")
+                            let rail1 = Vector(X: Float(rails1[0])!, Y: Float(rails1[1])!)
+                            let rail2 = Vector(X: Float(rails2[0])!, Y: Float(rails2[1])!)
+                            
+                            islands.append(Island(l: location, v: objectData[2], rotates: aspects[0].toBool()!, slides: true, railStart: rail1, railEnd: rail2, pivotNum: Int(aspects[4]), dockNum: Int(aspects[5]), keyNum: Int(aspects[6])))
+                        }
+                        else {
+                            islands.append(Island(l: location, v: objectData[2], rotates: aspects[0].toBool()!, slides: false, pivotNum: Int(aspects[2]), dockNum: Int(aspects[3]), keyNum: Int(aspects[4])))
+                        }
+                    }
+                    else {
+                        islands.append(Island(l: location, v: objectData[2], rotates: false, slides: false))
+                    }
+                    
+                    print("\tISLAND: (" + String(location.x) + "," + String(location.y) + ")")
+                }
+                else {
+                    let locations = objectData[1].componentsSeparatedByString(",")
+                    let location = Vector(X: Float(locations[0])!, Y: Float(locations[1])!)
+                    
+                    if (objectData.count == 4) {
+                        let aspects = objectData[3].componentsSeparatedByString(",") //MAX = 4: pivot,dock,key,initial
+                        items.append(Item(l: location, a: Float(objectData[2])!, t: objectData[0], p: Int(aspects[0]), d: Int(aspects[1]), k: Int(aspects[2]), i: aspects[3].toBool()))
+                    }
+                    else {
+                        items.append(Item(l: location, a: Float(objectData[2])!, t: objectData[0]))
+                    }
+                    
+                    print("\tITEM: (" + String(location.x) + "," + String(location.y) + ")")
+                }
+            }
+        }
+        
+        if summary.count == 6 {
+            //number,name,x,y,rotates,gravityrotates
+            //levels.append(Level(start: Vector(X: Float(summary[2])!, Y: Float(summary[3])!), rotates: summary[4].toBool()!, gravityRotates: summary[5].toBool()!))
+        }
+        else if summary.count == 4 {
+            //number,name,x,y
+            //levels.append(Level(start: Vector(X: Float(summary[0])!, Y: Float(summary[1])!), rotates: false))
+        }
+        
+        print("\t... DONE")
+    }
+    catch {
+        print("ERROR: FILE NOT FOUND")
+    }
+}
+
 func createLevels() {
-    //————————————————————————————————————————————————————————————————— 0: Menu
+    //————————————————————————————————————————————————————————————————— 0: Menu √
     levels.append(Level(start: Vector(X: -90, Y: 100), rotates: false))
     levels[levels.count-1].addItem(Item(l: Vector(X: -70, Y: 100), a: 20, t: "Tap the desired level\nSwipe for more levels"))
     
     levels[levels.count-1].addItem(Item(l: Vector(X: 80, Y: 190), a: 0, t: "door"))
     
-    //————————————————————————————————————————————————————————————————— 1: Almost nothing
+    //————————————————————————————————————————————————————————————————— 1: Nothing  √
     levels.append(Level(start: Vector(X: -100, Y: 0), rotates: false))
     levels[levels.count-1].addIsland(Island(l: Vector(X: 0, Y: 100), v: "-150,-10 150,-10 150,10 -150,10", rotates: false, slides: false))
     
@@ -24,7 +103,7 @@ func createLevels() {
     
     levels[levels.count-1].addItem(Item(l: Vector(X: 130, Y: 89), a: 0, t: "door"))
     
-    //————————————————————————————————————————————————————————————————— 2: One chasm
+    //————————————————————————————————————————————————————————————————— 2: Cliff    √
     levels.append(Level(start: Vector(X: -90, Y: -30), rotates: false))
     levels[levels.count-1].addIsland(Island(l: Vector(X: -115, Y: 20), v: "-20,-10 160,-10 160,10 -20,10", rotates: false, slides: false))
     levels[levels.count-1].addIsland(Island(l: Vector(X: 130, Y: 180), v: "-50,-20 20,-20 20,20 -50,20", rotates: false, slides: false))
@@ -34,7 +113,7 @@ func createLevels() {
     
     levels[levels.count-1].addItem(Item(l: Vector(X: 130, Y: 159), a: 0, t: "door"))
     
-    //————————————————————————————————————————————————————————————————— 3: Statics
+    //————————————————————————————————————————————————————————————————— 3: Statics  √
     levels.append(Level(start: Vector(X: -90, Y: -50), rotates: false))
     levels[levels.count-1].addIsland(Island(l: Vector(X: -90, Y: 0), v: "-30,-20 -20,-30 20,-30 30,-20 30,20 20,30 -20,30 -30,20", rotates: false, slides: false))
     levels[levels.count-1].addIsland(Island(l: Vector(X: 40, Y: 40), v: "-40,-20 -30,-30 50,-30 60,-20 60,20 50,30 -30,30 -40,20", rotates: false, slides: false))
@@ -46,7 +125,7 @@ func createLevels() {
     levels[levels.count-1].addItem(Item(l: Vector(X: 50, Y: 9), a: 0, t: "door"))
     levels[levels.count-1].addItem(Item(l: Vector(X: 100, Y: 109), a: 0, t: "door"))
     
-    //————————————————————————————————————————————————————————————————— 4: Chimneys
+    //————————————————————————————————————————————————————————————————— 4: Chimneys √
     levels.append(Level(start: Vector(X: 130, Y: -80), rotates: false))
     levels[levels.count-1].addIsland(Island(l: Vector(X: 100, Y: -40), v: "-45,-10 -40,-15 45,-15 45,15 -45,15", rotates: false, slides: false))
     levels[levels.count-1].addIsland(Island(l: Vector(X: 150, Y: -50), v: "-5,-25 5,-25 5,25 -5,25", rotates: false, slides: false))

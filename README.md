@@ -66,7 +66,7 @@ The project, from a programming perspective…
 - [x] Create a menu/home (title, choose level)
 - [x] Choose game name: Formal
 - [x] Title skin
-- [ ] Create background items in levels (for trees, bushes, clouds?, etc.) ? Now that the game is less focused on the environment, I might not do this.
+- [ ] Create background items in levels (for trees, bushes, clouds?, etc.)? Now that the game is less focused on the environment, I might not do this.
 - [x] Create a button class (for levels, home)
 - [x] Create level button skins
 - [x] Create selected level button skins
@@ -85,14 +85,14 @@ The project, from a programming perspective…
 - [x] Reduce lag from drawing: try splitting drawing into multiple UIViews on top of each other
 - [x] Create wraparound for level buttons
 - [x] Reduce lag from drawing: split up drawing into even more UIViews: ButtonView, StaticView (for level stuff that isn’t drawn every loop)
-- [ ] Add an AnimatedView (for level stuff that is animated with a period of more than 0.001)?
+- [ ] Add an AnimatedView (for level stuff that is animated with a period of more than 0.001)? It might be used for animated background items, if I ever add those.
 - [x] Reset level button positions when reset is called
 - [x] Get new bitmap editor — Piskel can’t have multiple files open and copy-paste between them.
 - [x] After completing the "last" level, switch back to level #0
 - [x] I NEED an easier way to create level blocks. Right now, I have to make locations EXACTLY in the center, and make borders line up EXACTLY between touching blocks.
 - [x] Switch back to drawing…? It was so much easier…
-- [ ] Disable button presses if initialCursor.x != finalCursor.x ?
-- [ ] Create home button icon
+- [x] Disable button presses if initialCursor.x != finalCursor.x ?
+- [x] Create home button icon
 - [x] Create text class for instructions in-game
 - [x] Create OK button to disable level button interaction (selecting, swiping) and decrease alpha for unselected buttons OR find another way to fix the problem
 - [x] Delete 2 spikes and add an extension to the base of level 4
@@ -111,7 +111,6 @@ The project, from a programming perspective…
 - [x] Fix blocks with pivots glitch (reflection off of these blocks is done wrong; I suspect it's because the block is registered as canRotate)
 - [x] Fix glitch where pivoting items don't... pivot. (The location of the anchor is NOT the same as the location given, due relation to center edit)
 - [x] Level: spike "hoops"
-- [ ] Add in mid-air movement, just not upwards (like I did in Multiplayer Testing)?
 - [ ] Perhaps add in fps limiter (like in MultTest)?
 - [x] Level: 2PI, 2SI, spikes
 - [x] Add increased friction when touching ground
@@ -121,14 +120,13 @@ The project, from a programming perspective…
 - [x] Add shrapnel class, which just ejects from a given point
 - [x] Add islands that slide with another dock island
 - [ ] Change movement to not move in relation to touched sliding ground (if ground slides, add island.velocity to player.velocity)
-- [ ] Levels that "connect" to each other...?
 - [x] Level: guillotine
 - [x] Level: boat
 - [x] Level: hatch
 - [x] Level: skyscraper
 - [x] Level: bridge
 - [ ] Level: train
-- [ ] Level: shell
+- [ ] Level: shell (first level with gravity switches)
 - [x] Change bullets to circles (the rigid polygon collisions aren't worth the extra time to process, I think)
 - [x] Create new bullet class based upon point-line collision
 - [x] Fix bullet glitch; they seem to be colliding with the wrong coordinates. POSSIBLE PROBLEM: using the same vector names for different calculations effects previous calculations?
@@ -221,11 +219,35 @@ The project, from a programming perspective…
 - [ ] Player dies if crushed by 2 islands
 - [ ] Fix bullets+shrapnel to have them always explode after (3?) collisions
 - [ ] Store levels in external file, so they aren't in the program's memory? Load each as demanded?
-- [ ] — Look up string functions in Swift (important: split string by character, get string between two tags).
+- [x] — Look up string functions in Swift (important: split string by character, get string between two tags): to find a string within another, source.rangeOfString(search). To find a string between two tag strings, source.rangeOfString("(?<=tag1)(?=tag2)")
+- [x] — Look up how to read from an extrernal .txt file in Swift
 - [ ] — System for storage:
-- [ ] —— Create a text file with all the level information
-- [ ] ——— Syntax = split levels by '\n', split level objects by '+', extract object info between /\ () <> {}
-- [ ] ———— An example level: "5,Name+(0,0)<1,1 2,2 3,3>{0,0,-1,0}+/spike\(0,0)<1>{0}+/door\(0,0)<0.5>{}\n"
+- [x] —— Create a text file with all the level information
+- [x] ——— Store and read from file
+- [ ] ——— Transcribe levels
+- [x] ———— 1
+- [x] ———— 2
+- [x] ———— 3
+- [x] ———— 4
+- [ ] ———— 5
+- [ ] ———— 6
+- [ ] ———— 7
+- [ ] ———— 8
+- [ ] ———— 9
+- [ ] ———— 10
+- [ ] ———— 11
+- [ ] ———— 12
+- [ ] ———— 13
+- [ ] ———— 14
+- [ ] ———— 15
+- [ ] ———— 16
+- [ ] ———— 17
+- [ ] ———— 18
+- [ ] ———— 19
+- [ ] ———— 20
+- [ ] ———— 21
+- [x] ——— Syntax = split levels by '\n', split level objects by '+', split object data by '=', split data components by ' ' and ','
+- [x] ———— An example level: "5,A Level,0,0+island=0,0=1,1 2,2 3,3+spike=0,0=3.1416+door=0,0=0.5\n"
 - [ ] —— When a level is requested, find the level in the text file with that number and store it.
 - [ ] —— Only store one level at a time in the program.
 - [ ] Move level 14, make it rotate not for gravity, change text
@@ -235,4 +257,7 @@ The project, from a programming perspective…
 - [ ] Try introducing multiple touches: touch w/ 3 fingers to pause, double-tap on a level # to select, remove confirmation button at bottom of menu
 - [ ] Help menu
 - [ ] Resize main menu after removing the confirmation button (green arrow)
+- [ ] Fix alignment in levels 14 and 15
+- [ ] Thicken platforms in level 19
+- [ ] Start compiling images for display (to replace some-not all-of the drawing methods: player, items, moving islands, bullets, shrapnel) to decrease Formal's overall latency?
 

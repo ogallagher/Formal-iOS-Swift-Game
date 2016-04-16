@@ -35,6 +35,8 @@ var player: Player = Player()
 var levels: [Level] = []
 var buttons: [Button] = []
 
+let levelFile = NSBundle.mainBundle().pathForResource("formalLevels", ofType: "txt")
+
 var level = 0
 var previousLevel = 0
 var levelSelect = 1
@@ -103,6 +105,11 @@ class ViewController: UIViewController {
             }
         }
         
+        readLevel(0)
+        readLevel(1)
+        readLevel(2)
+        readLevel(3)
+        readLevel(4)
         createLevels()
         createButtons()
     }
