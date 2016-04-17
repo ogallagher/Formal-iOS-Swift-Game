@@ -1,16 +1,16 @@
 # Formal
-This is an iOS game, written with Swift, for multiple screen dimensions.
+This is an iOS game, written with Swift, for multiple screen dimensions. ogallagher is the sole author for the whole project.
 
 
 #Description
-A difficult platformer with some unique features:
+Formal is a difficult platformer with some unique features:
 > Incorporates the device orientation heavily to control in-game gravity (so you'll end up holding your device upside-down more than most apps require)
 
-> Most features in the levels are controlled by gravity
+> Most features in the game are controlled by gravity
 
 > The avatar can only be moved when touching ground
 
-> All graphics are drawn with CGGraphicsContext
+> All graphics are drawn with CGGraphicsContext, though I plan on supplementing some drawing with loading image files to help counter latency
 
 > It's not finished
 
@@ -26,6 +26,10 @@ The project, from a programming perspective…
 >> The Vector class is what I’m using to do all the vector math in the project. Other’s have probably also made Vector classes for swift projects, but I had a hard time finding anything that I wanted to use. It’s been tested thoroughly through this game, so it should be good to use in another project
 
 > Has room for improvement. For example, the method I use for collision between the player and surrounding islands is not perfect, and there is a glitch I haven't been able to fix, where the level selection buttons can overlap if swiped too fast. See the To-Do List for some glitches that have been solved are have yet to be solved.
+
+> Stores all level information in a .txt file, and reads each level on demand
+
+> Runs on a structure centered entirely on the useage of NSTimer.scheduledTimerWithTimeInterval(), which I use to have a constant game update loop (this makes it easier to program for those less familiar with standard iOS protocols, of which I am one)
 
 
 #To-Do List
@@ -112,7 +116,7 @@ The project, from a programming perspective…
 - [x] Fix glitch where pivoting items don't... pivot. (The location of the anchor is NOT the same as the location given, due relation to center edit)
 - [x] Level: spike "hoops"
 - [ ] Perhaps add in fps limiter (like in MultTest)?
-- [x] Level: 2PI, 2SI, spikes
+- [x] Level: 2PI, 2SI, spikes (now called Random)
 - [x] Add increased friction when touching ground
 - [ ] Add switch to enable rotating gravity? I haven't made a level with this yet, though.
 - [x] Add turrets that shoot little red triangles
@@ -218,38 +222,38 @@ The project, from a programming perspective…
 - [x] Create a pull-down menu in the upper right-hand corner that reveals the home button
 - [ ] Player dies if crushed by 2 islands
 - [ ] Fix bullets+shrapnel to have them always explode after (3?) collisions
-- [ ] Store levels in external file, so they aren't in the program's memory? Load each as demanded?
+- [x] Store levels in external file, so they aren't in the program's memory? Load each as demanded?
 - [x] — Look up string functions in Swift (important: split string by character, get string between two tags): to find a string within another, source.rangeOfString(search). To find a string between two tag strings, source.rangeOfString("(?<=tag1)(?=tag2)")
 - [x] — Look up how to read from an extrernal .txt file in Swift
-- [ ] — System for storage:
+- [x] — System for storage:
 - [x] —— Create a text file with all the level information
 - [x] ——— Store and read from file
-- [ ] ——— Transcribe levels
+- [x] ——— Transcribe levels
 - [x] ———— 1
 - [x] ———— 2
 - [x] ———— 3
 - [x] ———— 4
-- [ ] ———— 5
-- [ ] ———— 6
-- [ ] ———— 7
-- [ ] ———— 8
-- [ ] ———— 9
-- [ ] ———— 10
-- [ ] ———— 11
-- [ ] ———— 12
-- [ ] ———— 13
-- [ ] ———— 14
-- [ ] ———— 15
-- [ ] ———— 16
-- [ ] ———— 17
-- [ ] ———— 18
-- [ ] ———— 19
-- [ ] ———— 20
-- [ ] ———— 21
+- [x] ———— 5
+- [x] ———— 6
+- [x] ———— 7
+- [x] ———— 8
+- [x] ———— 9
+- [x] ———— 10
+- [x] ———— 11
+- [x] ———— 12
+- [x] ———— 13
+- [x] ———— 14
+- [x] ———— 15
+- [x] ———— 16
+- [x] ———— 17
+- [x] ———— 18
+- [x] ———— 19
+- [x] ———— 20
+- [x] ———— 21
 - [x] ——— Syntax = split levels by '\n', split level objects by '+', split object data by '=', split data components by ' ' and ','
 - [x] ———— An example level: "5,A Level,0,0+island=0,0=1,1 2,2 3,3+spike=0,0=3.1416+door=0,0=0.5\n"
-- [ ] —— When a level is requested, find the level in the text file with that number and store it.
-- [ ] —— Only store one level at a time in the program.
+- [x] —— When a level is requested, find the level in the text file with that number and store it.
+- [x] —— Only store one level at a time in the program.
 - [ ] Move level 14, make it rotate not for gravity, change text
 - [x] Fix glitch that arose when creating the pull-menu for the home button (now the player doesn't move at all!) >: (
 - [x] Fix movement so swipes are not stored
@@ -257,7 +261,10 @@ The project, from a programming perspective…
 - [ ] Try introducing multiple touches: touch w/ 3 fingers to pause, double-tap on a level # to select, remove confirmation button at bottom of menu
 - [ ] Help menu
 - [ ] Resize main menu after removing the confirmation button (green arrow)
-- [ ] Fix alignment in levels 14 and 15
-- [ ] Thicken platforms in level 19
+- [ ] Fix alignment in levels 12, 14, and 15
+- [ ] Thicken platforms in levels 16 and 19
 - [ ] Start compiling images for display (to replace some-not all-of the drawing methods: player, items, moving islands, bullets, shrapnel) to decrease Formal's overall latency?
-
+- [ ] Fix rotating doors in level 14
+- [ ] Fix glitch with new level system where the last level can't be unlocked
+- [ ] Create a lauch screen (perhaps an animated introduction w/ Formal's icon)
+- [ ] Information Menu: my name, latest update date, #levels, history, etc.

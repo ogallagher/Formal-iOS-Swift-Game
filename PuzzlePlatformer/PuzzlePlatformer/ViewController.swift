@@ -32,12 +32,12 @@ var finalCursor: CGPoint!
 var initialCursor: CGPoint!
 
 var player: Player = Player()
-var levels: [Level] = []
 var buttons: [Button] = []
 
 let levelFile = NSBundle.mainBundle().pathForResource("formalLevels", ofType: "txt")
 
-var level = 0
+var level: Level = Level(num: 0, nam: "", start: Vector(X: -1, Y: -1), rotates: false)
+var levels: Int = 0
 var previousLevel = 0
 var levelSelect = 1
 var highestLevel: Int? = 0
@@ -96,7 +96,7 @@ class ViewController: UIViewController {
         self.motionManager.startDeviceMotionUpdates()
         self.motionManager.startDeviceMotionUpdatesToQueue(queue) {
             (data, error) in
-            if levels[level].enableRotation {
+            if level.enableRotation {
                 let rotation = atan2(data!.gravity.x, data!.gravity.y) - (M_PI * 0.5)
                 gravity.set(createVectorFromAngle(Float(rotation)))
             }
@@ -106,11 +106,6 @@ class ViewController: UIViewController {
         }
         
         readLevel(0)
-        readLevel(1)
-        readLevel(2)
-        readLevel(3)
-        readLevel(4)
-        createLevels()
         createButtons()
     }
     
@@ -172,7 +167,7 @@ class TouchAndDisplayView: UIView {
         let context = UIGraphicsGetCurrentContext()
         CGContextSetLineWidth(context, 2.0)
         
-        if levels[level].enableRotation && rotationIndicator < 1 {
+        if level.enableRotation && rotationIndicator < 1 {
             CGContextBeginPath(context)
             UIColor.init(red: 0, green: 0.2, blue: 1, alpha: 0.5).set()
             CGContextSetLineWidth(context, CGFloat(3*scale))
@@ -190,7 +185,7 @@ class TouchAndDisplayView: UIView {
             CGContextFillPath(context)
         }
         
-        if level > 0 && (menuIndicator.y != 0 || previousLevel != level) {
+        if level.number > 0 && (menuIndicator.y != 0 || previousLevel != level.number) {
             UIColor.init(red: 0, green: 0.2, blue: 1, alpha: 0.5).set()
             CGContextSetLineWidth(context, 3)
             
@@ -211,7 +206,7 @@ class TouchAndDisplayView: UIView {
             CGContextStrokePath(context)
         }
         
-        for item in levels[level].items {
+        for item in level.items {
             if item.bullets.count > 0 {
                 for bullet in item.bullets {
                     let lX = centerX + ((bullet.location.x - centerX)*scale)
@@ -234,7 +229,7 @@ class TouchAndDisplayView: UIView {
             }
         }
         
-        if !player.location.equals(Vector(X: -1, Y: -1)) && level > 0 {
+        if !player.location.equals(Vector(X: -1, Y: -1)) && level.number > 0 {
             let lX = centerX + ((player.location.x - centerX)*scale)
             let lY = centerY + ((player.location.y - centerY)*scale)
             
@@ -251,7 +246,7 @@ class TouchAndDisplayView: UIView {
     }
     
     func updateIslands() {
-        for island in levels[level].islands {
+        for island in level.islands {
             if island.key != nil {
                 if island.timer > 0 {
                     island.rotate()
@@ -267,18 +262,18 @@ class TouchAndDisplayView: UIView {
     }
     
     func updateItems() {
-        for item in levels[level].items {
+        for item in level.items {
             item.action(player.location)
             
             if item.pivot != nil {
-                item.rotate(levels[level].islands[item.pivot!].location, angleV: levels[level].islands[item.pivot!].angleV)
+                item.rotate(level.islands[item.pivot!].location, angleV: level.islands[item.pivot!].angleV)
             }
             if item.dock != nil {
-                item.slide(levels[level].islands[item.dock!].rail[2])
+                item.slide(level.islands[item.dock!].rail[2])
             }
             if item.bullets.count > 0 {
                 for i in 0 ..< item.bullets.count {
-                    for wall in levels[level].islands {
+                    for wall in level.islands {
                         item.bullets[i].collide(wall)
                     }
                     item.bullets[i].move()
@@ -301,7 +296,7 @@ class TouchAndDisplayView: UIView {
     
     func updatePlayer() {
         if player.startMoving {
-            for island in levels[level].islands {
+            for island in level.islands {
                 if island.key == nil || (island.key != nil && island.timer! > 150){
                     let point1 = Vector(X: 0, Y: 0)
                     let point2 = Vector(X: 0, Y: 0)
@@ -359,49 +354,47 @@ class TouchAndDisplayView: UIView {
     }
     
     func resetLevel() {
-        for aLevel in levels {
-            for island in aLevel.islands {
-                if island.key != nil {
-                    island.timer = 0
-                }
+        for island in level.islands {
+            if island.key != nil {
+                island.timer = 0
             }
-            for item in aLevel.items {
-                if item.type == "door" {
-                    item.opened = false
-                    if item.timer != nil {
-                        item.timer = 0
-                    }
-                }
-                if item.type == "turret" && level != previousLevel {
-                    item.bullets.removeAll()
-                    item.shrapnel.removeAll()
-                }
-                if item.type == "button" {
-                    item.opened = false
+        }
+        for item in level.items {
+            if item.type == "door" {
+                item.opened = false
+                if item.timer != nil {
                     item.timer = 0
                 }
-                if item.type == "spike" {
-                    if item.timer != nil {
-                        item.timer = 0
-                    }
+            }
+            if item.type == "turret" && level.number != previousLevel {
+                item.bullets.removeAll()
+                item.shrapnel.removeAll()
+            }
+            if item.type == "button" {
+                item.opened = false
+                item.timer = 0
+            }
+            if item.type == "spike" {
+                if item.timer != nil {
+                    item.timer = 0
                 }
             }
-            aLevel.doorsOpened = 0
         }
-        player.restart(levels[level].playerStart)
+        level.doorsOpened = 0
+        player.restart(level.playerStart)
         rotationIndicator = 0
     }
     
     func updateLevel() {
-        if level == 0 {
+        if level.number == 0 {
             if initialCursor != nil && initialCursor.x > CGFloat(viewWidth/2) + 80 && initialCursor.y > CGFloat(viewHeight - 100) {
                 reset = true
-                level = levelSelect
+                readLevel(levelSelect)
             }
         }
         else {
-            levels[level].checkDoors()
-            if levels[level].doorsOpened == levels[level].doorCount {
+            level.checkDoors()
+            if level.doorsOpened == level.doorCount {
                 reset = true
                 
                 let saveData = NSUserDefaults.standardUserDefaults()
@@ -413,25 +406,25 @@ class TouchAndDisplayView: UIView {
                 
                 let beatenArray = beatenLevels!.componentsSeparatedByString(",")
                 if !(beatenArray.contains(String(level))) {
-                    saveData.setObject(beatenLevels! + "," + String(level), forKey: "beatenLevels")
+                    saveData.setObject(beatenLevels! + "," + String(level.number), forKey: "beatenLevels")
                     beatenLevels = saveData.stringForKey("beatenLevels")
                 }
-                if level > highestLevel {
-                    saveData.setObject(level, forKey: "highestLevel")
-                    highestLevel = level
+                if level.number > highestLevel {
+                    saveData.setObject(level.number, forKey: "highestLevel")
+                    highestLevel = level.number
                 }
                 
-                if level < levels.count-1 {
-                    level += 1
+                if level.number < levels-1 {
+                    readLevel(level.number+1)
                 }
                 else {
-                    level = 0
+                    readLevel(0)
                     levelSelect = 0
                 }
             }
-            else if level > 0 && levelSelect == 0 {
+            else if level.number > 0 && levelSelect == 0 {
                 reset = true
-                level = levelSelect
+                readLevel(0)
             }
         }
     }
@@ -515,7 +508,7 @@ class RotatingSlidingView: UIView {
     override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         
-        for island in levels[level].islands {
+        for island in level.islands {
             CGContextBeginPath(context)
             
             if island.canRotate {
@@ -589,7 +582,7 @@ class RotatingSlidingView: UIView {
             }
         }
         
-        for item in levels[level].items {
+        for item in level.items {
             CGContextBeginPath(context)
             
             if item.type == "spike" && (item.pivot != nil || item.dock != nil || item.key != nil) {
@@ -631,7 +624,7 @@ class RotatingSlidingView: UIView {
                 
                 CGContextTranslateCTM(context, CGFloat(lX), CGFloat(lY))
                 CGContextRotateCTM(context, CGFloat(item.angle))
-                if level > 0 {
+                if level.number > 0 {
                     CGContextMoveToPoint(context, -8 * CGFloat(scale), 0)
                     if item.timer != nil {
                         CGContextAddLineToPoint(context, -8 * CGFloat(scale), -17 * CGFloat(scale) * CGFloat(item.timer!) / 200)
@@ -658,7 +651,7 @@ class RotatingSlidingView: UIView {
                 CGContextTranslateCTM(context, CGFloat(-1*lX), CGFloat(-1*lY))
             }
             else if item.type == "button" {
-                if item.key == nil || (item.key != nil && levels[level].items[item.key!].opened) {
+                if item.key == nil || (item.key != nil && level.items[item.key!].opened) {
                     UIColor.init(red: 0.7, green: 0.9, blue: 0.2, alpha: 1).set()
                     
                     let lX = centerX + ((item.location.x - centerX)*scale)
@@ -693,7 +686,7 @@ class StaticView: UIView {
     override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         
-        for island in levels[level].islands {
+        for island in level.islands {
             CGContextBeginPath(context)
             
             if !island.canRotate && !island.canSlide && island.key == nil {
@@ -717,7 +710,7 @@ class StaticView: UIView {
             }
         }
         
-        for item in levels[level].items {
+        for item in level.items {
             if item.pivot == nil && item.dock == nil && item.key == nil && item.type == "spike" {
                 CGContextBeginPath(context)
                 
@@ -750,7 +743,6 @@ class StaticView: UIView {
                 CGContextTranslateCTM(context, CGFloat(-1*lX), CGFloat(-1*lY))
             }
             else if item.type != "door" && item.type != "spike" && item.type != "turret" && item.type != "button" {
-                
                 let lX = centerX + ((item.location.x - centerX)*scale)
                 let lY = centerY + ((item.location.y - centerY)*scale)
                 
@@ -771,10 +763,10 @@ class StaticView: UIView {
     }
     
     func tick() {
-        if level != previousLevel || reset {
+        if level.number != previousLevel || reset {
             self.setNeedsDisplay()
         }
-        previousLevel = level
+        previousLevel = level.number
     }
 }
 
@@ -786,7 +778,7 @@ class ButtonView: UIView {
     
     override func drawRect(rect: CGRect) {
         for button in buttons {
-            if (button.location.x > 0 && button.location.x < Float(viewWidth) && button.location.y > 0 && button.location.y < Float(viewHeight)) && ((button.station != nil && level == button.station) || (button.station == nil && level != 0)) {
+            if (button.location.x > 0 && button.location.x < Float(viewWidth) && button.location.y > 0 && button.location.y < Float(viewHeight)) && ((button.station != nil && level.number == button.station) || (button.station == nil && level.number != 0)) {
                 
                 let textColor: UIColor
                 let text: NSString = button.skin.substringToIndex(button.skin.endIndex.advancedBy(-1))
@@ -802,7 +794,7 @@ class ButtonView: UIView {
                 }
                 
                 if text != "0" {
-                    let textSize = Int(80*scale)// - Float((text.length-1) * 10)
+                    let textSize = Int(80*scale)
                     let textFont: UIFont = UIFont(name: "GillSans-Light", size: CGFloat(textSize))!
                     
                     let textAlignment = NSMutableParagraphStyle.defaultParagraphStyle().mutableCopy() as! NSMutableParagraphStyle
@@ -820,7 +812,7 @@ class ButtonView: UIView {
     }
     
     func tick() {
-        if level != previousLevel || (initialCursor != nil) || (buttons[0].target != buttons[0].location.x) || buttons[0].skinChanged {
+        if level.number != previousLevel || (initialCursor != nil) || (buttons[0].target != buttons[0].location.x) || buttons[0].skinChanged {
             self.setNeedsDisplay()
         }
     }

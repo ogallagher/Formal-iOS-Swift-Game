@@ -44,7 +44,7 @@ class Player: RigidPolygon {
             flickForce.mult(3)
         }
         
-        if level > 0 {
+        if level.number > 0 {
             flick.set(flickForce)
         }
     }
@@ -62,7 +62,7 @@ class Player: RigidPolygon {
             if repelForce.mag() < otherNormal.mag()+10 {
                 repelForce.norm()
                 repelForce.mult(1.5)
-                if level > 0 {
+                if level.number > 0 {
                     velocity.set(repelForce)
                 }
             }
@@ -126,7 +126,7 @@ class RigidPolygon {
     }
     
     func collisionCornerWithLine(p1: Vector, p2: Vector, p3: Vector, a: Float? = nil) {
-        if level > 0 {
+        if level.number > 0 {
             let boundary = Vector(X: 0, Y: 0)
             let line = Vector(X: 0, Y: 0)
             var collisionsAngle: Float = 0
@@ -260,8 +260,8 @@ class RigidPolygon {
     }
     
     func fallForce() {
-        if level > 0 {
-            if levels[level].enableGravityRotation && touchingSurface && !surfaceRotates {
+        if level.number > 0 {
+            if level.enableGravityRotation && touchingSurface && !surfaceRotates {
                 myGravity.set(gravity)
                 myGravity.mult(0.05)
             }
@@ -271,7 +271,7 @@ class RigidPolygon {
     }
     
     func move() {
-        if level > 0 {
+        if level.number > 0 {
             velocity.add(acceleration)
             velocity.mult(0.99)
             location.add(velocity)
@@ -297,6 +297,8 @@ class RigidPolygon {
 
 
 class Level {
+    let number: Int
+    let name: String
     var islands: [Island] = []
     var items: [Item] = []
     var doorCount: Int = 0
@@ -305,7 +307,9 @@ class Level {
     var enableRotation: Bool = false
     var enableGravityRotation: Bool = false
     
-    init(start: Vector, rotates: Bool, gravityRotates: Bool? = nil) {
+    init(num: Int, nam: String, start: Vector, rotates: Bool, gravityRotates: Bool? = nil) {
+        number = num
+        name = nam
         playerStart = Vector(X: centerX + start.x, Y: centerY + start.y)
         enableRotation = rotates
         if gravityRotates != nil {
@@ -401,13 +405,13 @@ class Island {
     func rotate() {
         if canRotate {
             if anchorIsland != nil {
-                let otherLocation = Vector(X: levels[level].islands[anchorIsland!].location.x, Y: levels[level].islands[anchorIsland!].location.y)
+                let otherLocation = Vector(X: level.islands[anchorIsland!].location.x, Y: level.islands[anchorIsland!].location.y)
                 let radial = Vector(X: location.x, Y: location.y)
                 
                 radial.sub(otherLocation)
                 let magnitude = radial.mag()
                 
-                angleV = levels[level].islands[anchorIsland!].angleV
+                angleV = level.islands[anchorIsland!].angleV
                 angle += angleV
                 if angle < 0 {
                     angle += Float(M_PI * 2)
@@ -504,14 +508,14 @@ class Island {
                 location.add(rail[2])
             }
             else if dock != nil {
-                location.add(levels[level].islands[dock!].rail[2])
+                location.add(level.islands[dock!].rail[2])
             }
         }
     }
     
     func unlock() {
         if key != nil {
-            if levels[level].items[key!].opened {
+            if level.items[key!].opened {
                 if !(timer > 150) {
                     timer! += 1
                 }
@@ -676,6 +680,11 @@ class Item {
         if t == "turret" || (t == "door" && k != nil) || t == "button" || (t == "spike" && k != nil) {
             timer = 0
         }
+        var newLineRange = type.rangeOfString("\\n")
+        while newLineRange != nil {
+            type.replaceRange(newLineRange!, with: "\n")
+            newLineRange = type.rangeOfString("\\n")
+        }
     }
     
     func rotate(anchor: Vector, angleV: Float) {
@@ -701,7 +710,7 @@ class Item {
         
         if type == "spike" {
             if key != nil {
-                if levels[level].items[key!].opened {
+                if level.items[key!].opened {
                     if !(timer > 50) {
                         timer! += 1
                     }
@@ -728,7 +737,7 @@ class Item {
         }
         else if type == "door" {
             if key != nil {
-                if levels[level].items[key!].opened {
+                if level.items[key!].opened {
                     if !(timer > 200) {
                         timer! += 1
                     }
@@ -794,7 +803,7 @@ class Item {
                     timer = 1
                 }
             }
-            else if levels[level].items[key!].opened {
+            else if level.items[key!].opened {
                 if timer > 0 && timer < 50 {
                     timer! += 1
                 }
@@ -837,10 +846,10 @@ class Button {
     func changeSkin() {
         let previousSkin = skin
         if station != nil {
-            if level != station {
+            if level.number != station {
                 skin = ""
             }
-            else if link <= highestLevel!+2 && link < levels.count {
+            else if link <= highestLevel!+2 && link < levels {
                 if levelSelect == link {
                     skin = String(link) + "+"
                 }
@@ -865,7 +874,7 @@ class Button {
     }
     
     func checkSelected() {
-        if ((station != nil && level == station) || (station == nil && level > 0)) && initialCursor != nil && finalCursor != nil && tapped == false {
+        if ((station != nil && level.number == station) || (station == nil && level.number > 0)) && initialCursor != nil && finalCursor != nil && tapped == false {
             let difference = Vector(X: Float(initialCursor.x), Y: Float(initialCursor.y))
             difference.sub(Vector(X: Float(finalCursor.x), Y: Float(finalCursor.y)))
             
@@ -882,7 +891,7 @@ class Button {
     }
     
     func action() {
-        if ((station != nil && level == station!) || (station == nil && level > 0)) && (tapped && link <= highestLevel!+2 && link < levels.count) {
+        if ((station != nil && level.number == station!) || (station == nil && level.number > 0)) && (tapped && link <= highestLevel!+2 && link < levels) {
             levelSelect = link
             tapped = false
         }
