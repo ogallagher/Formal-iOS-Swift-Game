@@ -12,7 +12,7 @@ func readLevel(i: Int) {
     do {
         let levelFileString = try String(contentsOfFile: levelFile!)
         if i == 0 {
-            levels = levelFileString.componentsSeparatedByString("\n").count - 1
+            levels = levelFileString.componentsSeparatedByString("\n").count
         }
         
         let levelString = levelFileString.componentsSeparatedByString("\n")[i]
@@ -112,14 +112,31 @@ func readLevel(i: Int) {
             }
         }
         
-        if summary.count == 6 {
-            //number,name,x,y,rotates,gravityrotates
-            level = Level(num: Int(summary[0])!, nam: summary[1], start: Vector(X: Float(summary[2])!, Y: Float(summary[3])!), rotates: summary[4].toBool()!, gravityRotates: summary[5].toBool()!)
+        let number = Int(summary[0])!
+        let name = summary[1]
+        let start = Vector(X: Float(summary[2])!, Y: Float(summary[3])!)
+        
+        var initial: Int = 0
+        if summary.count == 5 {
+            initial = Int(summary[4])!
         }
-        else if summary.count == 4 {
-            //number,name,x,y
-            level = Level(num: Int(summary[0])!, nam: summary[1], start: Vector(X: Float(summary[2])!, Y: Float(summary[3])!), rotates: false)
+        else if summary.count == 8 {
+            initial = Int(summary[7])!
         }
+        
+        var rotates = false
+        var gravityRotates = false
+        if summary.count > 5 {
+            rotates = summary[4].toBool()!
+            gravityRotates = summary[5].toBool()!
+        }
+        
+        var gravitySwitches = false
+        if summary.count > 6 {
+            gravitySwitches = summary[6].toBool()!
+        }
+        
+        level = Level(num: number, nam: name, start: start, rotates: rotates, gravityRotates: gravityRotates, gravitySwitches: gravitySwitches, initial: initial)
         
         for island in islands {
             level.addIsland(island)
@@ -381,33 +398,7 @@ func readLevel(i: Int) {
 //    levels[levels.count-1].addItem(Item(l: Vector(X: 50, Y: 9), a: 0, t: "door"))
 //    levels[levels.count-1].addItem(Item(l: Vector(X: -90, Y: -31), a: 0, t: "door"))
 //    
-//    //————————————————————————————————————————————————————————————————— 14: Fountain
-//    levels.append(Level(start: Vector(X: -100, Y: -200), rotates: true))
-//    levels[levels.count-1].addIsland(Island(l: Vector(X: -100, Y: -150), v: "-40,0 40,0 40,10 0,40 -40,10", rotates: true, slides: false))
-//    levels[levels.count-1].addIsland(Island(l: Vector(X: -25, Y: -140), v: "-30,-10 30,-10 30,10 -30,10", rotates: false, slides: false))
-//    levels[levels.count-1].addIsland(Island(l: Vector(X: 15, Y: -160), v: "-10,-30 10,-30 10,30 -10,30", rotates: false, slides: false))
-//    levels[levels.count-1].addIsland(Island(l: Vector(X: -40, Y: -70), v: "-60,0 60,0 60,10 0,60 -60,10", rotates: true, slides: false))
-//    levels[levels.count-1].addIsland(Island(l: Vector(X: 8, Y: 51), v: "-70,0 70,0 70,10 0,70 -70,10", rotates: true, slides: false))
-//    levels[levels.count-1].addIsland(Island(l: Vector(X: -50, Y: 170), v: "50,-40 60,-40 60,40 -60,40 -60,30", rotates: false, slides: false))
-//    
-//    levels[levels.count-1].addItem(Item(l: Vector(X: -45, Y: -151), a: 0, t: "spike"))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: -35, Y: -151), a: 0, t: "spike"))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: -25, Y: -151), a: 0, t: "spike"))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: -15, Y: -151), a: 0, t: "spike"))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: -5, Y: -151), a: 0, t: "spike"))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: 15, Y: -191), a: 0, t: "spike"))
-//    
-//    levels[levels.count-1].addItem(Item(l: Vector(X: 0, Y: -160), a: 40, t: "    There\n    is"))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: -15, Y: -35), a: 55, t: "nothing"))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: -130, Y: 20), a: 48, t: "to\nsay."))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: 30, Y: 130), a: 20, t: "...In addition to\nwhat I just said,\nI mean."))
-//    
-//    levels[levels.count-1].addItem(Item(l: Vector(X: 0, Y: -71), a: 0, t: "door", p: 3))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: 65, Y: 50), a: 0, t: "door", p: 4))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: -82, Y: 181), a: Float(-1 * atan(0.63)), t: "door"))
-//    levels[levels.count-1].addItem(Item(l: Vector(X: 11, Y: 200), a: Float(M_PI * 0.5), t: "door"))
-//    
-//    //————————————————————————————————————————————————————————————————— 15: Crowding
+//    //————————————————————————————————————————————————————————————————— 14: Crowding
 //    levels.append(Level(start: Vector(X: 80, Y: 100), rotates: true))
 //    levels[levels.count-1].addIsland(Island(l: Vector(X: -90, Y: 0), v: "-30,-20 -20,-30 20,-30 30,-20 30,20 20,30 -20,30 -30,20", rotates: false, slides: false))
 //    levels[levels.count-1].addIsland(Island(l: Vector(X: 40, Y: 40), v: "-40,-20 -30,-30 50,-30 60,-20 60,20 50,30 -30,30 -40,20", rotates: false, slides: false))
@@ -421,7 +412,7 @@ func readLevel(i: Int) {
 //    levels[levels.count-1].addItem(Item(l: Vector(X: -90, Y: -31), a: 0, t: "door"))
 //    levels[levels.count-1].addItem(Item(l: Vector(X: -121, Y: 0), a: Float(M_PI*1.5), t: "door"))
 //    
-//    //————————————————————————————————————————————————————————————————— 16: Random
+//    //————————————————————————————————————————————————————————————————— 15: Random
 //    levels.append(Level(start: Vector(X: -110, Y: 90), rotates: true))
 //    levels[levels.count-1].addIsland(Island(l: Vector(X: -80, Y: 115), v: "-50,0 50,0 50,10 0,50 -50,10", rotates: true, slides: false))
 //    levels[levels.count-1].addIsland(Island(l: Vector(X: -80, Y: 170), v: "-70,-5 60,-5 60,5 -70,5", rotates: false, slides: false))
@@ -481,6 +472,32 @@ func readLevel(i: Int) {
 //    levels[levels.count-1].addItem(Item(l: Vector(X: 111, Y: 200), a: Float(M_PI*0.5), t: "door"))
 //    levels[levels.count-1].addItem(Item(l: Vector(X: -125, Y: 176), a: Float(M_PI), t: "door", k: 0))
 //    
+//    //————————————————————————————————————————————————————————————————— 16: Fountain
+//    levels.append(Level(start: Vector(X: -100, Y: -200), rotates: true))
+//    levels[levels.count-1].addIsland(Island(l: Vector(X: -100, Y: -150), v: "-40,0 40,0 40,10 0,40 -40,10", rotates: true, slides: false))
+//    levels[levels.count-1].addIsland(Island(l: Vector(X: -25, Y: -140), v: "-30,-10 30,-10 30,10 -30,10", rotates: false, slides: false))
+//    levels[levels.count-1].addIsland(Island(l: Vector(X: 15, Y: -160), v: "-10,-30 10,-30 10,30 -10,30", rotates: false, slides: false))
+//    levels[levels.count-1].addIsland(Island(l: Vector(X: -40, Y: -70), v: "-60,0 60,0 60,10 0,60 -60,10", rotates: true, slides: false))
+//    levels[levels.count-1].addIsland(Island(l: Vector(X: 64, Y: 8), v: "-70,0 70,0 70,10 0,70 -70,10", rotates: true, slides: false))
+//    levels[levels.count-1].addIsland(Island(l: Vector(X: -50, Y: 170), v: "50,-40 60,-40 60,40 -60,40 -60,30", rotates: false, slides: false))
+//
+//    levels[levels.count-1].addItem(Item(l: Vector(X: -45, Y: -151), a: 0, t: "spike"))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: -35, Y: -151), a: 0, t: "spike"))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: -25, Y: -151), a: 0, t: "spike"))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: -15, Y: -151), a: 0, t: "spike"))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: -5, Y: -151), a: 0, t: "spike"))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: 15, Y: -191), a: 0, t: "spike"))
+//
+//    levels[levels.count-1].addItem(Item(l: Vector(X: 0, Y: -160), a: 40, t: "    There\n    is"))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: -15, Y: -35), a: 55, t: "nothing"))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: -130, Y: 20), a: 48, t: "to\nsay."))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: 30, Y: 130), a: 20, t: "...In addition to\nwhat I just said,\nI mean."))
+//
+//    levels[levels.count-1].addItem(Item(l: Vector(X: 0, Y: -71), a: 0, t: "door", p: 3))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: 65, Y: 50), a: 0, t: "door", p: 4))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: -82, Y: 181), a: Float(-1 * atan(0.63)), t: "door"))
+//    levels[levels.count-1].addItem(Item(l: Vector(X: 11, Y: 200), a: Float(M_PI * 0.5), t: "door"))
+//
 //    //————————————————————————————————————————————————————————————————— 17: Skyscraper
 //    levels.append(Level(start: Vector(X: -10, Y: 45), rotates: true))
 //    levels[levels.count-1].addIsland(Island(l: Vector(X: 10, Y: 100), v: "-50,-10 50,-10 50,10 -50,10", rotates: false, slides: false))
@@ -609,7 +626,7 @@ func readLevel(i: Int) {
 //    levels[levels.count-1].addIsland(Island(l: Vector(X: 80, Y: -60), v: "-10,-30 10,-30 10,30 -10,30", rotates: false, slides: true, railStart: Vector(X: 35, Y: -60), railEnd: Vector(X: 115, Y: -60)))
 //    levels[levels.count-1].addIsland(Island(l: Vector(X: 54, Y: 90), v: "-10,-30 10,-30 10,30 -10,30", rotates: false, slides: true, dockNum: 0))
 //    levels[levels.count-1].addIsland(Island(l: Vector(X: 126, Y: 90), v: "-10,-30 10,-30 10,30 -10,30", rotates: false, slides: true, dockNum: 0))
-//    levels[levels.count-1].addIsland(Island(l: Vector(X: 150, Y: -60), v: "-10,-120 10,-120 10,120 -10,120", rotates: false, slides: false))
+//    levels[levels.count-1].addIsland(Island(l: Vector(X: 150, Y: -60), v: "-10,-120 12,-120 12,120 -10,120", rotates: false, slides: false))
 //    levels[levels.count-1].addIsland(Island(l: Vector(X: 0, Y: -60), v: "-10,-170 10,-170 10,120 -10,120", rotates: false, slides: false))
 //    levels[levels.count-1].addIsland(Island(l: Vector(X: -110, Y: 10), v: "-30,-10 30,-10 30,10 -30,10", rotates: false, slides: false))
 //    
@@ -636,12 +653,16 @@ func readLevel(i: Int) {
 //    levels[levels.count-1].addItem(Item(l: Vector(X: 139, Y: -165), a: Float(M_PI*1.5), t: "door"))
 //    levels[levels.count-1].addItem(Item(l: Vector(X: -130, Y: -1), a: 0, t: "door"))
 //    
-//    //————————————————————————————————————————————————————————————————— 22: Train
+//    //————————————————————————————————————————————————————————————————— 22: Antennae
 //    
-//    //————————————————————————————————————————————————————————————————— 23: Antennae
+//    //————————————————————————————————————————————————————————————————— 23: Train
 //    
 //    //————————————————————————————————————————————————————————————————— 24: Shell
 //    
 //    //————————————————————————————————————————————————————————————————— 25: Intrusion
 //    
-//    //————————————————————————————————————————————————————————————————— 26: Hail
+//    //————————————————————————————————————————————————————————————————— 26: Umbrella
+//
+//    //————————————————————————————————————————————————————————————————— 27: Fences
+//
+//    //————————————————————————————————————————————————————————————————— 28: Current

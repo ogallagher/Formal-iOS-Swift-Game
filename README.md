@@ -123,13 +123,13 @@ The project, from a programming perspective…
 - [x] Add bullet class, a subclass of RigidPolygon to be shot from turrets
 - [x] Add shrapnel class, which just ejects from a given point
 - [x] Add islands that slide with another dock island
-- [ ] Change movement to not move in relation to touched sliding ground (if ground slides, add island.velocity to player.velocity)
+- [x] Change movement to not move in relation to touched sliding ground (if ground slides, add island.velocity to player.location + cancel player.myGravity)
 - [x] Level: guillotine
 - [x] Level: boat
 - [x] Level: hatch
 - [x] Level: skyscraper
 - [x] Level: bridge
-- [ ] Level: train
+- [ ] Level: train = stay on the sliding platform
 - [ ] Level: shell (first level with gravity switches)
 - [x] Change bullets to circles (the rigid polygon collisions aren't worth the extra time to process, I think)
 - [x] Create new bullet class based upon point-line collision
@@ -142,7 +142,7 @@ The project, from a programming perspective…
 - [x] Add locked doors, which unlock when a button-item is pressed
 - [x] Fix button-item glitch, where you have to be on the button to unlock the door
 - [x] Add button-item to and fix level 16
-- [ ] Put rotation indicator drawing in a different view, so it doesn't update as fast or after it reaches the end of its animation
+- [x] Put rotation indicator drawing in a different view, so it doesn't update as fast or after it reaches the end of its animation
 - [x] Add text to level 16
 - [x] Add level skipping
 - [x] Keep track of beatenLevels
@@ -197,10 +197,10 @@ The project, from a programming perspective…
 - [x] Fix sliding island positions (not centered around centerX and centerY?)
 - [x] Add level parameter which isolates deviceMotion.gravity general use and application to player’s gravity
 - [x] Use new parameter for level 19
-- [ ] Create new rotation indicators for: 
-- [ ] — no rotation (shows direction of gravity)
-- [ ] — rotation but not for gravity
-- [ ] - gravity switches
+- [x] Create new rotation indicators for: 
+- [x] — no rotation (no longer doing this)
+- [x] — rotation but not for gravity
+- [x] - gravity switches
 - [ ] Add coins to areas in levels that are difficult to reach, though not necessary to continue? What would the coins do, then, if anything?
 - [x] Add sliding items (move according to a dock island’s velocity)
 - [ ] Add text to level 19
@@ -212,7 +212,6 @@ The project, from a programming perspective…
 - [x] Make the player die if crushed by a sliding block? (touching wall on opposite sides, with at least 1 being a sliding block) OR make levels so crushing never happens (edit rail, add spikes)
 - [ ] Check if appearing islands are redrawn after they finish growing
 - [x] Add spikes to corridor in level 20 
-- [ ] Add gravity switches (cardinal directions)
 - [ ] Add text to level 20
 - [x] Test islands that slide w/ another dock island
 - [ ] Check how to make the app size better for iPads
@@ -254,17 +253,27 @@ The project, from a programming perspective…
 - [x] ———— An example level: "5,A Level,0,0+island=0,0=1,1 2,2 3,3+spike=0,0=3.1416+door=0,0=0.5\n"
 - [x] —— When a level is requested, find the level in the text file with that number and store it.
 - [x] —— Only store one level at a time in the program.
-- [ ] Move level 14, make it rotate not for gravity, change text
+- [x] Move level 14 to current spot of level 17, make it rotate not for gravity, change text
 - [x] Fix glitch that arose when creating the pull-menu for the home button (now the player doesn't move at all!) >: (
 - [x] Fix movement so swipes are not stored
-- [ ] Fix spikes so their action sites match their positions OR decrease touchingGround areas around blocks (or both)
-- [ ] Try introducing multiple touches: touch w/ 3 fingers to pause, double-tap on a level # to select, remove confirmation button at bottom of menu
+- [x] Fix spikes and doors so their action sites match their positions
+- [x] Double-tap on a level # to select, remove confirmation button (green arrow) at bottom of menu
 - [ ] Help menu
-- [ ] Resize main menu after removing the confirmation button (green arrow)
-- [ ] Fix alignment in levels 12, 14, and 15
-- [ ] Thicken platforms in levels 16 and 19
+- [x] Resize main menu after removing the confirmation button
+- [x] Fix alignment in levels 14(√) and 21(√)
+- [x] Thicken platforms in levels 15(N/A), 16(N/A), and 19(N/A) OR, if flick towards ground is nullified, this is not necessary :)
 - [ ] Start compiling images for display (to replace some-not all-of the drawing methods: player, items, moving islands, bullets, shrapnel) to decrease Formal's overall latency?
-- [ ] Fix rotating doors in level 14
-- [ ] Fix glitch with new level system where the last level can't be unlocked
+- [x] Fix rotating doors in level 14
+- [x] Fix glitch with new level system where the last level can't be unlocked
 - [ ] Create a lauch screen (perhaps an animated introduction w/ Formal's icon)
 - [ ] Information Menu: my name, latest update date, #levels, history, etc.
+- [x] Don't draw rails anymore (they don't look that great and I didn't align them correctly)
+- [x] Fix selection of level 21
+- [x] Don't have buttons move if level.number != 0
+- [x] Make player movement magnitude analog
+- [ ] Level: Ducts (put in level 13's spot) = another like level 4, with rotating gravity
+- [x] Nullify flick components directed toward the ground
+- [ ] Level: Fences = vertical chimneys with segmented walls, where incoming bullets force player to control fall speed; gravity switches
+- [x] Create gravity switches (type of item): they set player.velocity to zero, switch player.myGravity to their choice (choice is stored in angle), and then become inactive. 
+- [x] Add initialGravity variable to levels
+- [ ] Level: Current = path(s) of gravity switches where player must use sliding blocks to avoid death/entrapment and reach doors

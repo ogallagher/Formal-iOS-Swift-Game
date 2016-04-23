@@ -26,23 +26,15 @@ class Player: RigidPolygon {
         let flickForce = Vector(X: Float(finalCursor!.x), Y: Float(finalCursor!.y))
         flickForce.x -= Float(initialCursor!.x)
         flickForce.y -= Float(initialCursor!.y)
-        if flickForce.mag() < 90 {
-            if flickForce.mag() < 5 {
-                flickForce.mult(0)
-            }
-            else {
-                flickForce.norm()
-                flickForce.mult(1.5)
-            }
+        
+        var magnitude = flickForce.mag()
+        if magnitude > 200 {
+            magnitude = 200
         }
-        else if flickForce.mag() < 150 {
-            flickForce.norm()
-            flickForce.mult(2)
-        }
-        else {
-            flickForce.norm()
-            flickForce.mult(3)
-        }
+        magnitude = 3*(magnitude/200)
+        
+        flickForce.norm()
+        flickForce.mult(magnitude)
         
         if level.number > 0 {
             flick.set(flickForce)
@@ -73,12 +65,48 @@ class Player: RigidPolygon {
         startMoving = false
         location.set(l)
         velocity.mult(0)
-        myGravity.set(Vector(X: 0, Y: 1))
+        if level.initialGravity == 1 {
+            myGravity.set(Vector(X: -1, Y: 0))
+        }
+        else if level.initialGravity == 2 {
+            myGravity.set(Vector(X: 0, Y: -1))
+        }
+        else if level.initialGravity == 3 {
+            myGravity.set(Vector(X: 1, Y: 0))
+        }
+        else {
+            myGravity.set(Vector(X: 0, Y: 1))
+        }
         myGravity.mult(0.05)
     }
     
     func control() {
         if touchingSurface && !flick.equals(Vector(X: 0, Y: 0)) {
+            let angle = angleBetween(flick, vector2: surfaceTouched)
+            if angle < Float(M_PI*0.5) {
+                let newFlick = Vector(X: 0, Y: 0)
+                newFlick.set(createVectorFromAngle(surfaceTouched.heading() + Float(M_PI*0.5)))
+                
+                var sHead = surfaceTouched.heading()
+                var fHead = flick.heading()
+                
+                if abs(sHead - fHead) > Float(M_PI*0.5) {
+                    if sHead > fHead {
+                        sHead -= Float(2*M_PI)
+                    }
+                    else {
+                        fHead -= Float(2*M_PI)
+                    }
+                }
+                
+                if sHead > fHead {
+                    newFlick.mult(-1)
+                }
+                
+                newFlick.mult(flick.mag()*sin(angle))
+                flick.set(newFlick)
+            }
+        
             velocity.set(flick)
             flick.mult(0)
         }
@@ -98,6 +126,7 @@ class RigidPolygon {
     var angleA: Float
     
     var myGravity: Vector
+    var surfaceTouched: Vector
     var touchingSurface: Bool
     var surfaceRotates: Bool
     var createFriction: Bool
@@ -114,6 +143,7 @@ class RigidPolygon {
         
         myGravity = Vector(X: 0, Y: 1)
         myGravity.mult(0.05)
+        surfaceTouched = Vector(X: 0, Y: 1)
         touchingSurface = false
         surfaceRotates = false
         createFriction = f
@@ -125,7 +155,7 @@ class RigidPolygon {
         }
     }
     
-    func collisionCornerWithLine(p1: Vector, p2: Vector, p3: Vector, a: Float? = nil) {
+    func collisionCornerWithLine(p1: Vector, p2: Vector, p3: Vector, a: Float? = nil, v: Vector? = nil) {
         if level.number > 0 {
             let boundary = Vector(X: 0, Y: 0)
             let line = Vector(X: 0, Y: 0)
@@ -164,6 +194,8 @@ class RigidPolygon {
                         
                         if line.mag() < 10 {
                             touchingSurface = true
+                            
+                            surfaceTouched.set(line)
                         }
                         
                         if line.mag() < 1.8*(velocity.mag()+1) {
@@ -235,7 +267,7 @@ class RigidPolygon {
                                     }
                                 }
                                 
-                                if a != nil {
+                                if a != nil && level.enableGravityRotation {
                                     var otherGravity = a! + Float(M_PI * 0.5)
                                     while otherGravity < 0 {
                                         otherGravity += Float(M_PI * 2)
@@ -250,6 +282,14 @@ class RigidPolygon {
                                 }
                                 else {
                                     surfaceRotates = false
+                                }
+                                
+                                if v != nil {
+                                    let otherVelocity = Vector(X: 0, Y: 0)
+                                    otherVelocity.set(v!)
+                                    
+                                    location.add(otherVelocity)
+                                    acceleration.sub(myGravity)
                                 }
                             }
                         }
@@ -306,8 +346,10 @@ class Level {
     var playerStart: Vector
     var enableRotation: Bool = false
     var enableGravityRotation: Bool = false
+    var enableGravitySwitches: Bool = false
+    var initialGravity: Int = 0
     
-    init(num: Int, nam: String, start: Vector, rotates: Bool, gravityRotates: Bool? = nil) {
+    init(num: Int, nam: String, start: Vector, rotates: Bool, initial: Int? = nil, gravityRotates: Bool? = nil, gravitySwitches: Bool? = nil) {
         number = num
         name = nam
         playerStart = Vector(X: centerX + start.x, Y: centerY + start.y)
@@ -317,6 +359,12 @@ class Level {
         }
         else {
             enableGravityRotation = enableRotation
+        }
+        if gravitySwitches != nil {
+            enableGravitySwitches = gravitySwitches!
+        }
+        if initial != nil {
+            initialGravity = initial!
         }
     }
     
@@ -659,6 +707,7 @@ class Item {
     var key: Int? = nil
     var timer: Int? = nil
     var initialState: Bool? = nil
+    var direction: Int? = nil
     
     init(l: Vector, a: Float, t: String, p: Int? = nil, d: Int? = nil, k: Int? = nil, i: Bool? = nil) {
         location = Vector(X: centerX + l.x, Y: centerY + l.y)
@@ -679,6 +728,10 @@ class Item {
         opened = false
         if t == "turret" || (t == "door" && k != nil) || t == "button" || (t == "spike" && k != nil) {
             timer = 0
+        }
+        if t == "switch" {
+            direction = Int(angle)
+            angle = 0
         }
         var newLineRange = type.rangeOfString("\\n")
         while newLineRange != nil {
@@ -704,11 +757,15 @@ class Item {
         location.add(anchorV)
     }
     
-    func action(player: Vector) {
-        let distance = Vector(X: player.x, Y: player.y)
-        distance.sub(location)
+    func action(p: Vector) {
+        let distance = Vector(X: p.x, Y: p.y)
         
         if type == "spike" {
+            let actionSite = createVectorFromAngle(angle-Float(M_PI*0.5))
+            actionSite.mult(4)
+            actionSite.add(location)
+            distance.sub(actionSite)
+            
             if key != nil {
                 if level.items[key!].opened {
                     if !(timer > 50) {
@@ -717,7 +774,7 @@ class Item {
                 }
             }
             
-            if distance.mag() < 14 {
+            if distance.mag() < 10 {
                 if key == nil {
                     reset = true
                 }
@@ -736,6 +793,11 @@ class Item {
             }
         }
         else if type == "door" {
+            let actionSite = createVectorFromAngle(angle-Float(M_PI*0.5))
+            actionSite.mult(8)
+            actionSite.add(location)
+            distance.sub(actionSite)
+            
             if key != nil {
                 if level.items[key!].opened {
                     if !(timer > 200) {
@@ -744,7 +806,7 @@ class Item {
                 }
             }
             
-            if distance.mag() < 15 {
+            if distance.mag() < 14 {
                 if key != nil {
                     if timer > 200 {
                         opened = true
@@ -756,6 +818,7 @@ class Item {
             }
         }
         else if type == "turret" {
+            distance.sub(location)
             timer! += 1
             
             if (timer! % 150 == 0) {
@@ -792,6 +855,8 @@ class Item {
             }
         }
         else if type == "button" {
+            distance.sub(location)
+            
             if key == nil {
                 if timer > 0 && timer < 50 {
                     timer! += 1
@@ -812,6 +877,34 @@ class Item {
                 }
                 if distance.mag() < 15 && timer == 0 {
                     timer = 1
+                }
+            }
+        }
+        else if type == "switch" {
+            let actionSite = createVectorFromAngle(angle-Float(M_PI*0.5))
+            actionSite.mult(6)
+            actionSite.add(location)
+            distance.sub(actionSite)
+            
+            if distance.mag() < 12 {
+                if !opened {
+                    player.location.set(actionSite)
+                    player.velocity.mult(0)
+                    if direction == 0 {
+                        player.myGravity.set(Vector(X: 0, Y: 1))
+                    }
+                    else if direction == 1 {
+                        player.myGravity.set(Vector(X: -1, Y: 0))
+                    }
+                    else if direction == 2 {
+                        player.myGravity.set(Vector(X: 0, Y: -1))
+                    }
+                    else if direction == 3 {
+                        player.myGravity.set(Vector(X: 1, Y: 0))
+                    }
+                    player.myGravity.mult(0.05)
+                    
+                    opened = true
                 }
             }
         }
@@ -884,7 +977,13 @@ class Button {
                 distance.sub(Vector(X: Float(initialCursor.x), Y: Float(initialCursor.y)))
                 
                 if distance.mag() < Float(radius) {
-                    tapped = true
+                    if levelSelect == link {
+                        reset = true
+                        readLevel(levelSelect)
+                    }
+                    else {
+                        tapped = true
+                    }
                 }
             }
         }
@@ -906,7 +1005,7 @@ class Button {
     }
     
     func slide() {
-        if station == 0 && link > 0 && target-location.x == 0 {
+        if level.number == 0 && station == 0 && link > 0 && target-location.x == 0 {
             if initialCursor != nil && finalCursor != nil && initialCursor.x != finalCursor.x {
                 target = Float(finalCursor.x)
                 target -= Float(initialCursor.x)

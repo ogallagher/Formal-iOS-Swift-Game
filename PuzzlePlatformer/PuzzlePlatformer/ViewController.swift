@@ -14,6 +14,7 @@ import CoreGraphics
 import CoreMotion
 
 var timer = NSTimer()
+var timerAnimate = NSTimer()
 var timerRotateSlide = NSTimer()
 var timerStatics = NSTimer()
 var timerButtons = NSTimer()
@@ -83,6 +84,7 @@ class ViewController: UIViewController {
         
         let saveData = NSUserDefaults.standardUserDefaults()
         highestLevel = saveData.integerForKey("highestLevel")
+        //highestLevel = 27
         beatenLevels = saveData.stringForKey("beatenLevels")
         
         if highestLevel == nil {
@@ -115,9 +117,9 @@ class ViewController: UIViewController {
         var yPos = 0
         
         for z in 0 ..< 3 {
-            for y in 0 ..< 3 {
+            for y in 0 ..< 4 {
                 for x in 0 ..< 3 {
-                    link = x+1+(y*3)+(z*9)
+                    link = 1+x+(y*3)+(z*12)
                     xPos = Int(centerX) - Int(130 * scale) + (z*Int(viewWidth))
                     xPos += x * Int((80+35) * scale)
                     yPos = y * Int((80+40) * scale)
@@ -159,31 +161,12 @@ class TouchAndDisplayView: UIView {
         }
         updateMenu()
         player.flickForce()
-        
         finalCursor = nil
     }
     
     override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         CGContextSetLineWidth(context, 2.0)
-        
-        if level.enableRotation && rotationIndicator < 1 {
-            CGContextBeginPath(context)
-            UIColor.init(red: 0, green: 0.2, blue: 1, alpha: 0.5).set()
-            CGContextSetLineWidth(context, CGFloat(3*scale))
-            CGContextAddArc(context, CGFloat(35*scale), CGFloat(35*scale), CGFloat(20*scale), CGFloat(M_PI*0.1), CGFloat((M_PI*1.7*rotationIndicator) + M_PI*0.1), 0)
-            CGContextStrokePath(context)
-            
-            CGContextBeginPath(context)
-            CGContextTranslateCTM(context, CGFloat(35*scale), CGFloat(35*scale))
-            CGContextRotateCTM(context, CGFloat((M_PI*1.7*rotationIndicator) + M_PI*0.1))
-            CGContextMoveToPoint(context, CGFloat(16*scale), 0)
-            CGContextAddLineToPoint(context, CGFloat(24*scale), 0)
-            CGContextAddLineToPoint(context, CGFloat(20*scale), CGFloat(4*scale))
-            CGContextRotateCTM(context, CGFloat(-1*((M_PI * 1.7 * rotationIndicator) + M_PI*0.1)))
-            CGContextTranslateCTM(context, CGFloat(-35*scale), CGFloat(-35*scale))
-            CGContextFillPath(context)
-        }
         
         if level.number > 0 && (menuIndicator.y != 0 || previousLevel != level.number) {
             UIColor.init(red: 0, green: 0.2, blue: 1, alpha: 0.5).set()
@@ -324,6 +307,14 @@ class TouchAndDisplayView: UIView {
                             
                             player.collisionCornerWithLine(point1, p2: point2, p3: point3, a: island.angle)
                         }
+                        else if island.canSlide {
+                            if island.dock != nil {
+                                player.collisionCornerWithLine(point1, p2: point2, p3: point3, v: level.islands[island.dock!].rail[2])
+                            }
+                            else {
+                                player.collisionCornerWithLine(point1, p2: point2, p3: point3, v: island.rail[2])
+                            }
+                        }
                         else {
                             player.collisionCornerWithLine(point1, p2: point2, p3: point3)
                         }
@@ -353,6 +344,43 @@ class TouchAndDisplayView: UIView {
         }
     }
     
+    func updateLevel() {
+        if level.number != 0 {
+            level.checkDoors()
+            if level.doorsOpened == level.doorCount {
+                reset = true
+                
+                let saveData = NSUserDefaults.standardUserDefaults()
+                beatenLevels = saveData.stringForKey("beatenLevels")
+                if beatenLevels == nil {
+                    beatenLevels = "0"
+                    saveData.setObject("0", forKey: "beatenLevels")
+                }
+                
+                let beatenArray = beatenLevels!.componentsSeparatedByString(",")
+                if !(beatenArray.contains(String(level))) {
+                    saveData.setObject(beatenLevels! + "," + String(level.number), forKey: "beatenLevels")
+                }
+                if level.number > highestLevel {
+                    saveData.setObject(level.number, forKey: "highestLevel")
+                    highestLevel = level.number
+                }
+                
+                if level.number < levels-1 {
+                    readLevel(level.number+1)
+                }
+                else {
+                    readLevel(0)
+                    levelSelect = 0
+                }
+            }
+            else if level.number > 0 && levelSelect == 0 {
+                reset = true
+                readLevel(0)
+            }
+        }
+    }
+    
     func resetLevel() {
         for island in level.islands {
             if island.key != nil {
@@ -379,54 +407,13 @@ class TouchAndDisplayView: UIView {
                     item.timer = 0
                 }
             }
+            if item.type == "switch" {
+                item.opened = false
+            }
         }
         level.doorsOpened = 0
         player.restart(level.playerStart)
         rotationIndicator = 0
-    }
-    
-    func updateLevel() {
-        if level.number == 0 {
-            if initialCursor != nil && initialCursor.x > CGFloat(viewWidth/2) + 80 && initialCursor.y > CGFloat(viewHeight - 100) {
-                reset = true
-                readLevel(levelSelect)
-            }
-        }
-        else {
-            level.checkDoors()
-            if level.doorsOpened == level.doorCount {
-                reset = true
-                
-                let saveData = NSUserDefaults.standardUserDefaults()
-                beatenLevels = saveData.stringForKey("beatenLevels")
-                if beatenLevels == nil {
-                    beatenLevels = "0"
-                    saveData.setObject("0", forKey: "beatenLevels")
-                }
-                
-                let beatenArray = beatenLevels!.componentsSeparatedByString(",")
-                if !(beatenArray.contains(String(level))) {
-                    saveData.setObject(beatenLevels! + "," + String(level.number), forKey: "beatenLevels")
-                    beatenLevels = saveData.stringForKey("beatenLevels")
-                }
-                if level.number > highestLevel {
-                    saveData.setObject(level.number, forKey: "highestLevel")
-                    highestLevel = level.number
-                }
-                
-                if level.number < levels-1 {
-                    readLevel(level.number+1)
-                }
-                else {
-                    readLevel(0)
-                    levelSelect = 0
-                }
-            }
-            else if level.number > 0 && levelSelect == 0 {
-                reset = true
-                readLevel(0)
-            }
-        }
     }
     
     func updateButtons() {
@@ -488,13 +475,80 @@ class TouchAndDisplayView: UIView {
             menuIndicator.set(Vector(X: 0, Y: -1))
             reset = false
         }
-        updatePlayer()
         updateButtons()
         updateIslands()
         updateItems()
+        updatePlayer()
         
         if rotationIndicator < 1 {
             rotationIndicator += (1 - rotationIndicator)*0.025
+        }
+        if round(rotationIndicator*100) == 100 {
+            rotationIndicator = 1
+        }
+    }
+}
+
+class IndicatorView: UIView {
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        timerAnimate = NSTimer.scheduledTimerWithTimeInterval(0.025, target: self, selector: #selector(IndicatorView.tick), userInfo: nil, repeats: true)
+    }
+    
+    override func drawRect(rect: CGRect) {
+        let context = UIGraphicsGetCurrentContext()
+        
+        if level.number > 0 && rotationIndicator > 0 && rotationIndicator < 1 && (level.enableRotation || level.enableGravitySwitches){
+            CGContextBeginPath(context)
+            UIColor.init(red: 0, green: 0.2, blue: 1, alpha: 0.5).set()
+            CGContextSetLineWidth(context, CGFloat(3*scale))
+            if level.enableGravitySwitches {
+                CGContextMoveToPoint(context, CGFloat((35+20)*scale), CGFloat((35-21.5)*scale))
+                CGContextAddLineToPoint(context, CGFloat((35+20)*scale), CGFloat((35-21.5)*scale) + CGFloat(21.5*scale*Float(rotationIndicator)))
+                CGContextMoveToPoint(context, CGFloat((35-20)*scale), CGFloat((35+21.5)*scale))
+                CGContextAddLineToPoint(context, CGFloat((35-20)*scale), CGFloat((35+21.5)*scale) - CGFloat(43.25*scale*Float(rotationIndicator)))
+                CGContextMoveToPoint(context, CGFloat((35+20)*scale), CGFloat((35+20)*scale))
+                CGContextAddLineToPoint(context, CGFloat((35+20)*scale) - CGFloat(40*scale*Float(rotationIndicator)), CGFloat((35+20)*scale))
+                CGContextMoveToPoint(context, CGFloat((35-20)*scale), CGFloat((35-20)*scale))
+                CGContextAddLineToPoint(context, CGFloat((35-20)*scale) + CGFloat(40*scale*Float(rotationIndicator)), CGFloat((35-20)*scale))
+            }
+            else if level.enableGravityRotation {
+                CGContextAddArc(context, CGFloat(35*scale), CGFloat(35*scale), CGFloat(20*scale), CGFloat(M_PI*0.1), CGFloat((M_PI*1.7*rotationIndicator) + M_PI*0.1), 0)
+            }
+            else {
+                CGContextAddArc(context, CGFloat(35*scale), CGFloat(35*scale), CGFloat(20*scale), CGFloat(M_PI*0.1), CGFloat(M_PI*1.525*rotationIndicator), 0)
+                CGContextMoveToPoint(context, CGFloat(35*scale), CGFloat((35-21)*scale))
+                CGContextAddLineToPoint(context, CGFloat(35*scale), CGFloat((35-21)*scale) + CGFloat(21*scale*Float(rotationIndicator)))
+            }
+            CGContextStrokePath(context)
+            
+            CGContextBeginPath(context)
+            CGContextTranslateCTM(context, CGFloat(35*scale), CGFloat(35*scale))
+            if level.enableGravitySwitches {
+                CGContextMoveToPoint(context, CGFloat(16*scale), CGFloat(-21.5*scale) + CGFloat(21.5*scale*Float(rotationIndicator)))
+                CGContextAddLineToPoint(context, CGFloat(24*scale), CGFloat(-21.5*scale) + CGFloat(21.5*scale*Float(rotationIndicator)))
+                CGContextAddLineToPoint(context, CGFloat(20*scale), CGFloat(-17.5*scale) + CGFloat(21.5*scale*Float(rotationIndicator)))
+            }
+            else if level.enableGravityRotation {
+                CGContextRotateCTM(context, CGFloat((M_PI*1.7*rotationIndicator) + M_PI*0.1))
+                CGContextMoveToPoint(context, CGFloat(16*scale), 0)
+                CGContextAddLineToPoint(context, CGFloat(24*scale), 0)
+                CGContextAddLineToPoint(context, CGFloat(20*scale), CGFloat(4*scale))
+                CGContextRotateCTM(context, CGFloat(-1*((M_PI * 1.7 * rotationIndicator) + M_PI*0.1)))
+            }
+            else {
+                CGContextMoveToPoint(context, CGFloat(-4*scale), CGFloat(-21*scale + 21*scale*Float(rotationIndicator)))
+                CGContextAddLineToPoint(context, CGFloat(4*scale), CGFloat(-21*scale + 21*scale*Float(rotationIndicator)))
+                CGContextAddLineToPoint(context, 0, CGFloat(-17*scale + 21*scale*Float(rotationIndicator)))
+            }
+            CGContextTranslateCTM(context, CGFloat(-35*scale), CGFloat(-35*scale))
+            CGContextFillPath(context)
+        }
+    }
+    
+    func tick() {
+        if rotationIndicator < 1 {
+            self.setNeedsDisplay()
         }
     }
 }
@@ -627,24 +681,15 @@ class RotatingSlidingView: UIView {
                 if level.number > 0 {
                     CGContextMoveToPoint(context, -8 * CGFloat(scale), 0)
                     if item.timer != nil {
-                        CGContextAddLineToPoint(context, -8 * CGFloat(scale), -17 * CGFloat(scale) * CGFloat(item.timer!) / 200)
-                        CGContextAddLineToPoint(context, 8 * CGFloat(scale), -17 * CGFloat(scale) * CGFloat(item.timer!) / 200)
+                        CGContextAddLineToPoint(context, -8 * CGFloat(scale), -16 * CGFloat(scale) * CGFloat(item.timer!) / 200)
+                        CGContextAddLineToPoint(context, 8 * CGFloat(scale), -16 * CGFloat(scale) * CGFloat(item.timer!) / 200)
                     }
                     else {
-                        CGContextAddLineToPoint(context, -8 * CGFloat(scale), -17 * CGFloat(scale))
-                        CGContextAddLineToPoint(context, 8 * CGFloat(scale), -17 * CGFloat(scale))
+                        CGContextAddLineToPoint(context, -8 * CGFloat(scale), -16 * CGFloat(scale))
+                        CGContextAddLineToPoint(context, 8 * CGFloat(scale), -16 * CGFloat(scale))
                     }
                     CGContextAddLineToPoint(context, 8 * CGFloat(scale), 0)
                     CGContextAddLineToPoint(context, -8 * CGFloat(scale), 0)
-                }
-                else {
-                    CGContextMoveToPoint(context, -20 * CGFloat(scale), -5 * CGFloat(scale))
-                    CGContextAddLineToPoint(context, 50 * CGFloat(scale), -5 * CGFloat(scale))
-                    CGContextAddLineToPoint(context, 50 * CGFloat(scale), -10 * CGFloat(scale))
-                    CGContextAddLineToPoint(context, 60 * CGFloat(scale), 0 * CGFloat(scale))
-                    CGContextAddLineToPoint(context, 50 * CGFloat(scale), 10 * CGFloat(scale))
-                    CGContextAddLineToPoint(context, 50 * CGFloat(scale), 5 * CGFloat(scale))
-                    CGContextAddLineToPoint(context, -20 * CGFloat(scale), 5 * CGFloat(scale))
                 }
                 CGContextFillPath(context)
                 CGContextRotateCTM(context, CGFloat(item.angle * -1))
@@ -668,6 +713,40 @@ class RotatingSlidingView: UIView {
                     CGContextRotateCTM(context, CGFloat(item.angle * -1))
                     CGContextTranslateCTM(context, CGFloat(-1*lX), CGFloat(-1*lY))
                 }
+            }
+            else if item.type == "switch" {
+                CGContextSetLineWidth(context, CGFloat(scale))
+                
+                if item.opened {
+                    UIColor.init(red: 0.05, green: 0, blue: 0.5, alpha: 0.25).set()
+                }
+                else {
+                    UIColor.init(red: 0.05, green: 0, blue: 0.5, alpha: 1).set()
+                }
+                
+                let lX = centerX + ((item.location.x - centerX)*scale)
+                let lY = centerY + ((item.location.y - centerY)*scale)
+                
+                CGContextTranslateCTM(context, CGFloat(lX), CGFloat(lY))
+                
+                CGContextRotateCTM(context, CGFloat(item.angle))
+                CGContextMoveToPoint(context, CGFloat(-6*scale), 0)
+                CGContextAddLineToPoint(context, CGFloat(-6*scale), CGFloat(-12*scale))
+                CGContextAddLineToPoint(context, CGFloat(6*scale), CGFloat(-12*scale))
+                CGContextAddLineToPoint(context, CGFloat(6*scale), 0)
+                CGContextAddLineToPoint(context, CGFloat(-6.5*scale), 0)
+                CGContextRotateCTM(context, CGFloat(-1*item.angle))
+                
+                CGContextTranslateCTM(context, 0, CGFloat(-6*scale))
+                CGContextRotateCTM(context, CGFloat(Double(item.direction!) * M_PI*0.5))
+                CGContextMoveToPoint(context, CGFloat(-4*scale), CGFloat(-3*scale))
+                CGContextAddLineToPoint(context, 0, CGFloat(3*scale))
+                CGContextAddLineToPoint(context, CGFloat(4*scale), CGFloat(-3*scale))
+                CGContextRotateCTM(context, -1 * CGFloat(Double(item.direction!) * M_PI*0.5))
+                CGContextTranslateCTM(context, 0, CGFloat(6*scale))
+                
+                CGContextStrokePath(context)
+                CGContextTranslateCTM(context, CGFloat(-1*lX), CGFloat(-1*lY))
             }
         }
     }
@@ -701,12 +780,6 @@ class StaticView: UIView {
                 }
                 CGContextAddLineToPoint(context, CGFloat(lX + island.vertices[0].x*scale), CGFloat(lY + island.vertices[0].y*scale))
                 CGContextFillPath(context)
-            }
-            else if island.canSlide && island.rail.count > 0 && island.key == nil {
-                UIColor.grayColor().set()
-                CGContextMoveToPoint(context, CGFloat(island.rail[0].x * scale), CGFloat(island.rail[0].y * scale))
-                CGContextAddLineToPoint(context, CGFloat(island.rail[1].x * scale), CGFloat(island.rail[1].y * scale))
-                CGContextStrokePath(context)
             }
         }
         
@@ -778,7 +851,7 @@ class ButtonView: UIView {
     
     override func drawRect(rect: CGRect) {
         for button in buttons {
-            if (button.location.x > 0 && button.location.x < Float(viewWidth) && button.location.y > 0 && button.location.y < Float(viewHeight)) && ((button.station != nil && level.number == button.station) || (button.station == nil && level.number != 0)) {
+            if (button.location.x > 0 && button.location.x < Float(viewWidth) && button.location.y > 0) && ((button.station != nil && level.number == button.station) || (button.station == nil && level.number != 0)) {
                 
                 let textColor: UIColor
                 let text: NSString = button.skin.substringToIndex(button.skin.endIndex.advancedBy(-1))
