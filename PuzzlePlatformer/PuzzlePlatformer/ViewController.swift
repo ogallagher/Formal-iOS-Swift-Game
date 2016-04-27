@@ -358,8 +358,9 @@ class TouchAndDisplayView: UIView {
                 }
                 
                 let beatenArray = beatenLevels!.componentsSeparatedByString(",")
-                if !(beatenArray.contains(String(level))) {
+                if !(beatenArray.contains(String(level.number))) {
                     saveData.setObject(beatenLevels! + "," + String(level.number), forKey: "beatenLevels")
+                    beatenLevels = saveData.stringForKey("beatenLevels")
                 }
                 if level.number > highestLevel {
                     saveData.setObject(level.number, forKey: "highestLevel")

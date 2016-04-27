@@ -206,7 +206,7 @@ The project, from a programming perspective…
 - [ ] Add text to level 19
 - [x] Create drawing methods for sliding items under the RotatingAndSlidingView
 - [x] Fix sliding items glitch (Solution: set island.rail[2] (parallel velocity) to change in location when the sliding island is at one of the rail's extremes)
-- [ ] Level: antennae
+- [x] Level: antennae
 - [ ] Level: intrusion (first turret level)
 - [x] Edit turrets so they only shoot within π/2 radians of their eye (so they don’t shoot through the ground on which they sit)
 - [x] Make the player die if crushed by a sliding block? (touching wall on opposite sides, with at least 1 being a sliding block) OR make levels so crushing never happens (edit rail, add spikes)
@@ -277,3 +277,5 @@ The project, from a programming perspective…
 - [x] Create gravity switches (type of item): they set player.velocity to zero, switch player.myGravity to their choice (choice is stored in angle), and then become inactive. 
 - [x] Add initialGravity variable to levels
 - [ ] Level: Current = path(s) of gravity switches where player must use sliding blocks to avoid death/entrapment and reach doors
+- [x] Fix glitch where beatenLevels in plist is not updated correctly
+- [ ] Add text to level 22
