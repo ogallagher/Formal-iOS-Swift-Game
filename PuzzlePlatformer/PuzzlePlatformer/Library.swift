@@ -614,7 +614,7 @@ class Bullet {
     
     func tick() {
         if explode == 0 {
-            if timer > 5 || location.x < centerX - viewWidth/2 || location.x > centerX + viewWidth/2 || location.y < centerY - viewHeight/2 || location.y > centerY + viewHeight/2 {
+            if timer > 3 || location.x < centerX - viewWidth/2 || location.x > centerX + viewWidth/2 || location.y < centerY - viewHeight/2 || location.y > centerY + viewHeight/2 {
                 explode = 1
             }
             else if Vector(X: location.x-player.location.x, Y: location.y-player.location.y).mag() < Float(radius + 4) {
@@ -640,7 +640,6 @@ class Bullet {
                     line2.mult(-2 * cos(angle) * velocity.mag())
                     velocity.add(line2)
                 }
-                
             }
             
             var v1 = v2 - 1
@@ -683,12 +682,15 @@ class Bullet {
     }
     
     func move() {
-        let myGravity = Vector(X: gravity.x, Y: gravity.y)
-        myGravity.mult(0.05)
-        
-        acceleration.add(myGravity)
-        velocity.add(acceleration)
-        velocity.mult(0.99)
+        if timer > 0 {
+            let myGravity = Vector(X: player.myGravity.x, Y: player.myGravity.y)
+            myGravity.norm()
+            myGravity.mult(0.05)
+            
+            acceleration.add(myGravity)
+            velocity.add(acceleration)
+            velocity.mult(0.99)
+        }
         location.add(velocity)
         
         acceleration.mult(0)
@@ -726,7 +728,10 @@ class Item {
             initialState = i
         }
         opened = false
-        if t == "turret" || (t == "door" && k != nil) || t == "button" || (t == "spike" && k != nil) {
+        if t == "turret" {
+            timer = 150
+        }
+        else if (t == "door" && k != nil) || t == "button" || (t == "spike" && k != nil) {
             timer = 0
         }
         if t == "switch" {
@@ -819,9 +824,11 @@ class Item {
         }
         else if type == "turret" {
             distance.sub(location)
-            timer! += 1
+            timer! -= 1
             
-            if (timer! % 150 == 0) {
+            if (timer! < 1) {
+                timer = 50 + Int(arc4random_uniform(100))
+                
                 let eye = createVectorFromAngle(angle - 0.5*Float(M_PI))
                 
                 if angleBetween(distance, vector2: eye) < 0.5*Float(M_PI) {

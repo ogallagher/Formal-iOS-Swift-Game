@@ -129,7 +129,7 @@ The project, from a programming perspective…
 - [x] Level: hatch
 - [x] Level: skyscraper
 - [x] Level: bridge
-- [ ] Level: train = stay on the sliding platform
+- [x] Level: train = stay on the sliding platform
 - [ ] Level: shell (first level with gravity switches)
 - [x] Change bullets to circles (the rigid polygon collisions aren't worth the extra time to process, I think)
 - [x] Create new bullet class based upon point-line collision
@@ -207,7 +207,7 @@ The project, from a programming perspective…
 - [x] Create drawing methods for sliding items under the RotatingAndSlidingView
 - [x] Fix sliding items glitch (Solution: set island.rail[2] (parallel velocity) to change in location when the sliding island is at one of the rail's extremes)
 - [x] Level: antennae
-- [ ] Level: intrusion (first turret level)
+- [ ] Level: intrusion
 - [x] Edit turrets so they only shoot within π/2 radians of their eye (so they don’t shoot through the ground on which they sit)
 - [x] Make the player die if crushed by a sliding block? (touching wall on opposite sides, with at least 1 being a sliding block) OR make levels so crushing never happens (edit rail, add spikes)
 - [ ] Check if appearing islands are redrawn after they finish growing
@@ -279,3 +279,9 @@ The project, from a programming perspective…
 - [ ] Level: Current = path(s) of gravity switches where player must use sliding blocks to avoid death/entrapment and reach doors
 - [x] Fix glitch where beatenLevels in plist is not updated correctly
 - [ ] Add text to level 22
+- [x] Switch levels 18 and 19
+- [ ] Fix relative friction w/ sliding islands
+- [x] Level: Intersect
+- [x] Level: Relay
+- [x] Change bullet.move() function to only factor in gravity after colliding with a wall
+- [x] Fix the addition/drawing of shrapnel (they currently only seem to spawn when there's more than one bullet...)

@@ -84,7 +84,7 @@ class ViewController: UIViewController {
         
         let saveData = NSUserDefaults.standardUserDefaults()
         highestLevel = saveData.integerForKey("highestLevel")
-        //highestLevel = 27
+//        highestLevel = 27
         beatenLevels = saveData.stringForKey("beatenLevels")
         
         if highestLevel == nil {
@@ -200,6 +200,8 @@ class TouchAndDisplayView: UIView {
                     CGContextAddArc(context, CGFloat(lX), CGFloat(lY), CGFloat(bullet.radius) * CGFloat(scale), 0, CGFloat(2*M_PI), 1)
                     CGContextFillPath(context)
                 }
+            }
+            if item.shrapnel.count > 0 {
                 for shard in item.shrapnel {
                     let lX = centerX + ((shard.location.x - centerX)*scale)
                     let lY = centerY + ((shard.location.y - centerY)*scale)
